@@ -4,22 +4,30 @@
  */
 
 import * as React from 'react';
-import { Text as DefaultText, View as DefaultView } from 'react-native';
+import {
+  Text as DefaultText,
+  View as DefaultView,
+  ScrollView as DefaultScrollView,
+} from 'react-native';
+import DefaultMarkdown, {
+  MarkdownProps as DefaultMarkdownProps,
+} from 'react-native-markdown-display';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
+import theme from '../theme';
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
-  colorName: keyof typeof Colors.light & keyof typeof Colors.dark
+  colorName: keyof typeof theme[keyof typeof theme]['colors']
 ) {
-  const theme = useColorScheme();
-  const colorFromProps = props[theme];
+  const colorScheme = useColorScheme();
+  const colorFromProps = props[colorScheme];
 
   if (colorFromProps) {
     return colorFromProps;
   } else {
-    return Colors[theme][colorName];
+    return theme[colorScheme].colors[colorName];
   }
 }
 
@@ -30,6 +38,8 @@ type ThemeProps = {
 
 export type TextProps = ThemeProps & DefaultText['props'];
 export type ViewProps = ThemeProps & DefaultView['props'];
+export type ScrollViewProps = ThemeProps & DefaultScrollView['props'];
+export type MarkdownProps = ThemeProps & DefaultMarkdownProps & { children: ViewProps['children'] };
 
 export const Text = (props: TextProps) => {
   const { style, lightColor, darkColor, ...otherProps } = props;
@@ -43,4 +53,18 @@ export const View = (props: ViewProps) => {
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
+};
+
+export const ScrollView = (props: ScrollViewProps) => {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+
+  return <DefaultScrollView contentContainerStyle={[{ backgroundColor }, style]} {...otherProps} />;
+};
+
+export const Markdown = (props: MarkdownProps) => {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
+
+  return <DefaultMarkdown style={{ body: { color: color, ...style } }} {...otherProps} />;
 };
