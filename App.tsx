@@ -6,8 +6,11 @@ import NewsScreen from './screens/News/News';
 import { Provider as PaperProvider } from 'react-native-paper';
 import theme from './theme';
 import useColorScheme from './hooks/useColorScheme';
+import { View } from './components/Themed';
 
-export default function App() {
+const Stack = createNativeStackNavigator();
+
+const App = () => {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
@@ -17,10 +20,16 @@ export default function App() {
     return (
       <PaperProvider theme={theme[colorScheme]}>
         <SafeAreaProvider>
-          <NewsScreen />
+          <View>
+            <Stack.Navigator initialRouteName="News">
+                <Stack.Screen name="News" component={NewsScreen} />
+            <Stack.Navigator>
+          </View>
           <StatusBar />
         </SafeAreaProvider>
       </PaperProvider>
     );
   }
-}
+};
+
+export default App;
