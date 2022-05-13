@@ -12,12 +12,14 @@ import {
 } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import GraphQLProvider from './providers/GraphQLProvider';
+import useNotifications from './hooks/useNotifications';
 
 const Stack = createNativeStackNavigator<{ News: undefined; Article: { id: string } }>();
 
 const App = () => {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
+  const token = useNotifications();
 
   const screenOptions: NativeStackNavigationOptions = {
     headerStyle: {
