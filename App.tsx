@@ -13,7 +13,7 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import GraphQLProvider from './providers/GraphQLProvider';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<{ News: undefined; Article: { id: string } }>();
 
 const App = () => {
   const isLoadingComplete = useCachedResources();
@@ -38,6 +38,7 @@ const App = () => {
             <SafeAreaProvider>
               <Stack.Navigator initialRouteName="News" screenOptions={screenOptions}>
                 <Stack.Screen name="News" component={NewsScreen} />
+                <Stack.Screen name="Article" component={NewsScreen} />
               </Stack.Navigator>
               <StatusBar />
             </SafeAreaProvider>
