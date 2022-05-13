@@ -9,7 +9,6 @@ const ArticleList = () => {
     variables: { page_number: 0, per_page: 10 },
   });
   const articles = data?.news?.articles;
-  console.log(data);
 
   if (loading) {
     return <Text>loading</Text>;

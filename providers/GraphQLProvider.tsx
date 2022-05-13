@@ -1,10 +1,17 @@
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client';
+import {
+  ApolloClient,
+  ApolloProvider,
+  createHttpLink,
+  HttpLink,
+  InMemoryCache,
+} from '@apollo/client';
 import { offsetLimitPagination } from '@apollo/client/utilities';
 import React, { PropsWithChildren, useState } from 'react';
+import { NewsPageQuery } from '~/generated/graphql';
 // import { GRAPHQL_ADDRESS } from '@env';
 
-const apolloLink = createHttpLink({
-  uri: 'https://graphql.api.dsek.se/',
+const apolloLink = new HttpLink({
+  uri: 'https://graphql.api.dsek.se',
 });
 
 // const createAuthLink = (token) =>
@@ -20,14 +27,10 @@ const getCache = () => {
     typePolicies: {
       Query: {
         fields: {
-          //   news: offsetLimitPagination(),
+          // news: offsetLimitPagination(),
+          news: {},
         },
       },
-      //   Query: {
-      //     fields: {
-      //       news: offsetLimitPagination(),
-      //     },
-      //   },
     },
   });
 };
