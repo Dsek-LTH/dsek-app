@@ -339,8 +339,6 @@ export type Event = {
   description_en?: Maybe<Scalars['String']>;
   end_datetime: Scalars['Datetime'];
   id: Scalars['UUID'];
-  isLikedByMe: Scalars['Boolean'];
-  likes: Scalars['Int'];
   link?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
   number_of_updates: Scalars['Int'];
@@ -361,9 +359,7 @@ export type EventFilter = {
 export type EventMutations = {
   __typename?: 'EventMutations';
   create?: Maybe<Event>;
-  like?: Maybe<Event>;
   remove?: Maybe<Event>;
-  unlike?: Maybe<Event>;
   update?: Maybe<Event>;
 };
 
@@ -373,17 +369,7 @@ export type EventMutationsCreateArgs = {
 };
 
 
-export type EventMutationsLikeArgs = {
-  id: Scalars['UUID'];
-};
-
-
 export type EventMutationsRemoveArgs = {
-  id: Scalars['UUID'];
-};
-
-
-export type EventMutationsUnlikeArgs = {
   id: Scalars['UUID'];
 };
 
@@ -593,6 +579,7 @@ export type Mutation = {
   markdown?: Maybe<MarkdownMutations>;
   member?: Maybe<MemberMutations>;
   position?: Maybe<PositionMutations>;
+  token?: Maybe<TokenMutations>;
 };
 
 export type PaginationInfo = {
@@ -812,6 +799,23 @@ export type QueryUserHasAccessToAliasArgs = {
   student_id: Scalars['String'];
 };
 
+export type Token = {
+  __typename?: 'Token';
+  expo_token: Scalars['String'];
+  id: Scalars['UUID'];
+  member_id?: Maybe<Scalars['UUID']>;
+};
+
+export type TokenMutations = {
+  __typename?: 'TokenMutations';
+  register?: Maybe<Token>;
+};
+
+
+export type TokenMutationsRegisterArgs = {
+  expo_token: Scalars['String'];
+};
+
 export type UpdateArticle = {
   body?: InputMaybe<Scalars['String']>;
   bodyEn?: InputMaybe<Scalars['String']>;
@@ -999,78 +1003,6 @@ export type RemoveDoorMutationVariables = Exact<{
 
 
 export type RemoveDoorMutation = { __typename?: 'Mutation', access?: { __typename?: 'AccessMutations', door?: { __typename?: 'DoorMutations', remove?: { __typename?: 'Door', name: string } | null } | null } | null };
-
-export type EventsQueryVariables = Exact<{
-  start_datetime?: InputMaybe<Scalars['Datetime']>;
-  end_datetime?: InputMaybe<Scalars['Datetime']>;
-  id?: InputMaybe<Scalars['UUID']>;
-}>;
-
-
-export type EventsQuery = { __typename?: 'Query', events?: { __typename?: 'EventPagination', events: Array<{ __typename?: 'Event', title: string, id: any, short_description: string, description: string, start_datetime: any, end_datetime: any, link?: string | null, location?: string | null, organizer: string, title_en?: string | null, description_en?: string | null, short_description_en?: string | null, likes: number, isLikedByMe: boolean } | null> } | null };
-
-export type EventQueryVariables = Exact<{
-  id: Scalars['UUID'];
-}>;
-
-
-export type EventQuery = { __typename?: 'Query', event?: { __typename?: 'Event', title: string, id: any, short_description: string, description: string, start_datetime: any, end_datetime: any, link?: string | null, location?: string | null, organizer: string, title_en?: string | null, description_en?: string | null, short_description_en?: string | null, likes: number, isLikedByMe: boolean } | null };
-
-export type UpdateEventMutationVariables = Exact<{
-  id: Scalars['UUID'];
-  title?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['String']>;
-  short_description?: InputMaybe<Scalars['String']>;
-  start_datetime?: InputMaybe<Scalars['Datetime']>;
-  end_datetime?: InputMaybe<Scalars['Datetime']>;
-  link?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  organizer?: InputMaybe<Scalars['String']>;
-  title_en?: InputMaybe<Scalars['String']>;
-  description_en?: InputMaybe<Scalars['String']>;
-  short_description_en?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type UpdateEventMutation = { __typename?: 'Mutation', event?: { __typename?: 'EventMutations', update?: { __typename?: 'Event', title: string, id: any, short_description: string, description: string, start_datetime: any, end_datetime: any, link?: string | null, location?: string | null, organizer: string, title_en?: string | null, description_en?: string | null, short_description_en?: string | null } | null } | null };
-
-export type CreateEventMutationVariables = Exact<{
-  title: Scalars['String'];
-  description: Scalars['String'];
-  short_description: Scalars['String'];
-  start_datetime: Scalars['Datetime'];
-  end_datetime: Scalars['Datetime'];
-  link?: InputMaybe<Scalars['String']>;
-  location: Scalars['String'];
-  organizer: Scalars['String'];
-  title_en?: InputMaybe<Scalars['String']>;
-  description_en?: InputMaybe<Scalars['String']>;
-  short_description_en?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type CreateEventMutation = { __typename?: 'Mutation', event?: { __typename?: 'EventMutations', create?: { __typename?: 'Event', title: string, id: any, short_description: string, description: string, start_datetime: any, end_datetime: any, link?: string | null, location?: string | null, organizer: string, title_en?: string | null, description_en?: string | null, short_description_en?: string | null } | null } | null };
-
-export type RemoveEventMutationVariables = Exact<{
-  id: Scalars['UUID'];
-}>;
-
-
-export type RemoveEventMutation = { __typename?: 'Mutation', event?: { __typename?: 'EventMutations', remove?: { __typename?: 'Event', id: any } | null } | null };
-
-export type LikeEventMutationVariables = Exact<{
-  id: Scalars['UUID'];
-}>;
-
-
-export type LikeEventMutation = { __typename?: 'Mutation', event?: { __typename?: 'EventMutations', like?: { __typename?: 'Event', id: any } | null } | null };
-
-export type UnlikeEventMutationVariables = Exact<{
-  id: Scalars['UUID'];
-}>;
-
-
-export type UnlikeEventMutation = { __typename?: 'Mutation', event?: { __typename?: 'EventMutations', unlike?: { __typename?: 'Event', id: any } | null } | null };
 
 export type FilesQueryVariables = Exact<{
   bucket: Scalars['String'];
@@ -1292,6 +1224,13 @@ export type GetPresignedPutUrlMutationVariables = Exact<{
 
 
 export type GetPresignedPutUrlMutation = { __typename?: 'Mutation', article?: { __typename?: 'ArticleMutations', presignedPutUrl?: string | null } | null };
+
+export type UploadTokenMutationVariables = Exact<{
+  token: Scalars['String'];
+}>;
+
+
+export type UploadTokenMutation = { __typename?: 'Mutation', token?: { __typename?: 'TokenMutations', register?: { __typename?: 'Token', expo_token: string, id: any } | null } | null };
 
 export type GetPositionsQueryVariables = Exact<{
   committeeId?: InputMaybe<Scalars['UUID']>;
@@ -1918,331 +1857,6 @@ export function useRemoveDoorMutation(baseOptions?: Apollo.MutationHookOptions<R
 export type RemoveDoorMutationHookResult = ReturnType<typeof useRemoveDoorMutation>;
 export type RemoveDoorMutationResult = Apollo.MutationResult<RemoveDoorMutation>;
 export type RemoveDoorMutationOptions = Apollo.BaseMutationOptions<RemoveDoorMutation, RemoveDoorMutationVariables>;
-export const EventsDocument = gql`
-    query Events($start_datetime: Datetime, $end_datetime: Datetime, $id: UUID) {
-  events(
-    filter: {start_datetime: $start_datetime, end_datetime: $end_datetime, id: $id}
-  ) {
-    events {
-      title
-      id
-      short_description
-      description
-      start_datetime
-      end_datetime
-      link
-      location
-      organizer
-      title_en
-      description_en
-      short_description_en
-      likes
-      isLikedByMe
-    }
-  }
-}
-    `;
-
-/**
- * __useEventsQuery__
- *
- * To run a query within a React component, call `useEventsQuery` and pass it any options that fit your needs.
- * When your component renders, `useEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useEventsQuery({
- *   variables: {
- *      start_datetime: // value for 'start_datetime'
- *      end_datetime: // value for 'end_datetime'
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useEventsQuery(baseOptions?: Apollo.QueryHookOptions<EventsQuery, EventsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<EventsQuery, EventsQueryVariables>(EventsDocument, options);
-      }
-export function useEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EventsQuery, EventsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<EventsQuery, EventsQueryVariables>(EventsDocument, options);
-        }
-export type EventsQueryHookResult = ReturnType<typeof useEventsQuery>;
-export type EventsLazyQueryHookResult = ReturnType<typeof useEventsLazyQuery>;
-export type EventsQueryResult = Apollo.QueryResult<EventsQuery, EventsQueryVariables>;
-export const EventDocument = gql`
-    query Event($id: UUID!) {
-  event(id: $id) {
-    title
-    id
-    short_description
-    description
-    start_datetime
-    end_datetime
-    link
-    location
-    organizer
-    title_en
-    description_en
-    short_description_en
-    likes
-    isLikedByMe
-  }
-}
-    `;
-
-/**
- * __useEventQuery__
- *
- * To run a query within a React component, call `useEventQuery` and pass it any options that fit your needs.
- * When your component renders, `useEventQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useEventQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useEventQuery(baseOptions: Apollo.QueryHookOptions<EventQuery, EventQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<EventQuery, EventQueryVariables>(EventDocument, options);
-      }
-export function useEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EventQuery, EventQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<EventQuery, EventQueryVariables>(EventDocument, options);
-        }
-export type EventQueryHookResult = ReturnType<typeof useEventQuery>;
-export type EventLazyQueryHookResult = ReturnType<typeof useEventLazyQuery>;
-export type EventQueryResult = Apollo.QueryResult<EventQuery, EventQueryVariables>;
-export const UpdateEventDocument = gql`
-    mutation UpdateEvent($id: UUID!, $title: String, $description: String, $short_description: String, $start_datetime: Datetime, $end_datetime: Datetime, $link: String, $location: String, $organizer: String, $title_en: String, $description_en: String, $short_description_en: String) {
-  event {
-    update(
-      id: $id
-      input: {title: $title, description: $description, short_description: $short_description, start_datetime: $start_datetime, end_datetime: $end_datetime, link: $link, location: $location, organizer: $organizer, title_en: $title_en, description_en: $description_en, short_description_en: $short_description_en}
-    ) {
-      title
-      id
-      short_description
-      description
-      start_datetime
-      end_datetime
-      link
-      location
-      organizer
-      title_en
-      description_en
-      short_description_en
-    }
-  }
-}
-    `;
-export type UpdateEventMutationFn = Apollo.MutationFunction<UpdateEventMutation, UpdateEventMutationVariables>;
-
-/**
- * __useUpdateEventMutation__
- *
- * To run a mutation, you first call `useUpdateEventMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateEventMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateEventMutation, { data, loading, error }] = useUpdateEventMutation({
- *   variables: {
- *      id: // value for 'id'
- *      title: // value for 'title'
- *      description: // value for 'description'
- *      short_description: // value for 'short_description'
- *      start_datetime: // value for 'start_datetime'
- *      end_datetime: // value for 'end_datetime'
- *      link: // value for 'link'
- *      location: // value for 'location'
- *      organizer: // value for 'organizer'
- *      title_en: // value for 'title_en'
- *      description_en: // value for 'description_en'
- *      short_description_en: // value for 'short_description_en'
- *   },
- * });
- */
-export function useUpdateEventMutation(baseOptions?: Apollo.MutationHookOptions<UpdateEventMutation, UpdateEventMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateEventMutation, UpdateEventMutationVariables>(UpdateEventDocument, options);
-      }
-export type UpdateEventMutationHookResult = ReturnType<typeof useUpdateEventMutation>;
-export type UpdateEventMutationResult = Apollo.MutationResult<UpdateEventMutation>;
-export type UpdateEventMutationOptions = Apollo.BaseMutationOptions<UpdateEventMutation, UpdateEventMutationVariables>;
-export const CreateEventDocument = gql`
-    mutation CreateEvent($title: String!, $description: String!, $short_description: String!, $start_datetime: Datetime!, $end_datetime: Datetime!, $link: String, $location: String!, $organizer: String!, $title_en: String, $description_en: String, $short_description_en: String) {
-  event {
-    create(
-      input: {title: $title, description: $description, short_description: $short_description, start_datetime: $start_datetime, end_datetime: $end_datetime, link: $link, location: $location, organizer: $organizer, title_en: $title_en, description_en: $description_en, short_description_en: $short_description_en}
-    ) {
-      title
-      id
-      short_description
-      description
-      start_datetime
-      end_datetime
-      link
-      location
-      organizer
-      title_en
-      description_en
-      short_description_en
-    }
-  }
-}
-    `;
-export type CreateEventMutationFn = Apollo.MutationFunction<CreateEventMutation, CreateEventMutationVariables>;
-
-/**
- * __useCreateEventMutation__
- *
- * To run a mutation, you first call `useCreateEventMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateEventMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createEventMutation, { data, loading, error }] = useCreateEventMutation({
- *   variables: {
- *      title: // value for 'title'
- *      description: // value for 'description'
- *      short_description: // value for 'short_description'
- *      start_datetime: // value for 'start_datetime'
- *      end_datetime: // value for 'end_datetime'
- *      link: // value for 'link'
- *      location: // value for 'location'
- *      organizer: // value for 'organizer'
- *      title_en: // value for 'title_en'
- *      description_en: // value for 'description_en'
- *      short_description_en: // value for 'short_description_en'
- *   },
- * });
- */
-export function useCreateEventMutation(baseOptions?: Apollo.MutationHookOptions<CreateEventMutation, CreateEventMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateEventMutation, CreateEventMutationVariables>(CreateEventDocument, options);
-      }
-export type CreateEventMutationHookResult = ReturnType<typeof useCreateEventMutation>;
-export type CreateEventMutationResult = Apollo.MutationResult<CreateEventMutation>;
-export type CreateEventMutationOptions = Apollo.BaseMutationOptions<CreateEventMutation, CreateEventMutationVariables>;
-export const RemoveEventDocument = gql`
-    mutation RemoveEvent($id: UUID!) {
-  event {
-    remove(id: $id) {
-      id
-    }
-  }
-}
-    `;
-export type RemoveEventMutationFn = Apollo.MutationFunction<RemoveEventMutation, RemoveEventMutationVariables>;
-
-/**
- * __useRemoveEventMutation__
- *
- * To run a mutation, you first call `useRemoveEventMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRemoveEventMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [removeEventMutation, { data, loading, error }] = useRemoveEventMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useRemoveEventMutation(baseOptions?: Apollo.MutationHookOptions<RemoveEventMutation, RemoveEventMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RemoveEventMutation, RemoveEventMutationVariables>(RemoveEventDocument, options);
-      }
-export type RemoveEventMutationHookResult = ReturnType<typeof useRemoveEventMutation>;
-export type RemoveEventMutationResult = Apollo.MutationResult<RemoveEventMutation>;
-export type RemoveEventMutationOptions = Apollo.BaseMutationOptions<RemoveEventMutation, RemoveEventMutationVariables>;
-export const LikeEventDocument = gql`
-    mutation LikeEvent($id: UUID!) {
-  event {
-    like(id: $id) {
-      id
-    }
-  }
-}
-    `;
-export type LikeEventMutationFn = Apollo.MutationFunction<LikeEventMutation, LikeEventMutationVariables>;
-
-/**
- * __useLikeEventMutation__
- *
- * To run a mutation, you first call `useLikeEventMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLikeEventMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [likeEventMutation, { data, loading, error }] = useLikeEventMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useLikeEventMutation(baseOptions?: Apollo.MutationHookOptions<LikeEventMutation, LikeEventMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LikeEventMutation, LikeEventMutationVariables>(LikeEventDocument, options);
-      }
-export type LikeEventMutationHookResult = ReturnType<typeof useLikeEventMutation>;
-export type LikeEventMutationResult = Apollo.MutationResult<LikeEventMutation>;
-export type LikeEventMutationOptions = Apollo.BaseMutationOptions<LikeEventMutation, LikeEventMutationVariables>;
-export const UnlikeEventDocument = gql`
-    mutation UnlikeEvent($id: UUID!) {
-  event {
-    unlike(id: $id) {
-      id
-    }
-  }
-}
-    `;
-export type UnlikeEventMutationFn = Apollo.MutationFunction<UnlikeEventMutation, UnlikeEventMutationVariables>;
-
-/**
- * __useUnlikeEventMutation__
- *
- * To run a mutation, you first call `useUnlikeEventMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUnlikeEventMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [unlikeEventMutation, { data, loading, error }] = useUnlikeEventMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useUnlikeEventMutation(baseOptions?: Apollo.MutationHookOptions<UnlikeEventMutation, UnlikeEventMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UnlikeEventMutation, UnlikeEventMutationVariables>(UnlikeEventDocument, options);
-      }
-export type UnlikeEventMutationHookResult = ReturnType<typeof useUnlikeEventMutation>;
-export type UnlikeEventMutationResult = Apollo.MutationResult<UnlikeEventMutation>;
-export type UnlikeEventMutationOptions = Apollo.BaseMutationOptions<UnlikeEventMutation, UnlikeEventMutationVariables>;
 export const FilesDocument = gql`
     query files($bucket: String!, $prefix: String!) {
   files(bucket: $bucket, prefix: $prefix) {
@@ -3461,6 +3075,42 @@ export function useGetPresignedPutUrlMutation(baseOptions?: Apollo.MutationHookO
 export type GetPresignedPutUrlMutationHookResult = ReturnType<typeof useGetPresignedPutUrlMutation>;
 export type GetPresignedPutUrlMutationResult = Apollo.MutationResult<GetPresignedPutUrlMutation>;
 export type GetPresignedPutUrlMutationOptions = Apollo.BaseMutationOptions<GetPresignedPutUrlMutation, GetPresignedPutUrlMutationVariables>;
+export const UploadTokenDocument = gql`
+    mutation UploadToken($token: String!) {
+  token {
+    register(expo_token: $token) {
+      expo_token
+      id
+    }
+  }
+}
+    `;
+export type UploadTokenMutationFn = Apollo.MutationFunction<UploadTokenMutation, UploadTokenMutationVariables>;
+
+/**
+ * __useUploadTokenMutation__
+ *
+ * To run a mutation, you first call `useUploadTokenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadTokenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadTokenMutation, { data, loading, error }] = useUploadTokenMutation({
+ *   variables: {
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useUploadTokenMutation(baseOptions?: Apollo.MutationHookOptions<UploadTokenMutation, UploadTokenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadTokenMutation, UploadTokenMutationVariables>(UploadTokenDocument, options);
+      }
+export type UploadTokenMutationHookResult = ReturnType<typeof useUploadTokenMutation>;
+export type UploadTokenMutationResult = Apollo.MutationResult<UploadTokenMutation>;
+export type UploadTokenMutationOptions = Apollo.BaseMutationOptions<UploadTokenMutation, UploadTokenMutationVariables>;
 export const GetPositionsDocument = gql`
     query GetPositions($committeeId: UUID) {
   positions(filter: {committee_id: $committeeId}) {

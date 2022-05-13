@@ -11,7 +11,8 @@ import { NewsPageQuery } from '~/generated/graphql';
 // import { GRAPHQL_ADDRESS } from '@env';
 
 const apolloLink = new HttpLink({
-  uri: 'https://graphql.api.dsek.se',
+  // uri: 'https://graphql.api.dsek.se',
+  uri: 'http://172.20.10.7:4000/graphql',
 });
 
 // const createAuthLink = (token) =>

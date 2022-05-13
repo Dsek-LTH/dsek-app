@@ -1,25 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
-import * as React from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import useCachedResources from './hooks/useCachedResources';
-import NewsScreen from './screens/News/News';
-import { Provider as PaperProvider } from 'react-native-paper';
-import theme from './theme';
-import useColorScheme from './hooks/useColorScheme';
+import { NavigationContainer } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   NativeStackNavigationOptions,
 } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
+import * as React from 'react';
+import { Provider as PaperProvider } from 'react-native-paper';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import useCachedResources from './hooks/useCachedResources';
+import useColorScheme from './hooks/useColorScheme';
 import GraphQLProvider from './providers/GraphQLProvider';
-import useNotifications from './hooks/useNotifications';
+import NotificationProvider from './providers/NotificationProvider';
+import NewsScreen from './screens/News/News';
+import theme from './theme';
 
 const Stack = createNativeStackNavigator<{ News: undefined; Article: { id: string } }>();
 
 const App = () => {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
-  const token = useNotifications();
 
   const screenOptions: NativeStackNavigationOptions = {
     headerStyle: {
@@ -36,15 +35,17 @@ const App = () => {
     return (
       <PaperProvider theme={theme[colorScheme]}>
         <GraphQLProvider>
-          <NavigationContainer>
-            <SafeAreaProvider>
-              <Stack.Navigator initialRouteName="News" screenOptions={screenOptions}>
-                <Stack.Screen name="News" component={NewsScreen} />
-                <Stack.Screen name="Article" component={NewsScreen} />
-              </Stack.Navigator>
-              <StatusBar />
-            </SafeAreaProvider>
-          </NavigationContainer>
+          <NotificationProvider>
+            <NavigationContainer>
+              <SafeAreaProvider>
+                <Stack.Navigator initialRouteName="News" screenOptions={screenOptions}>
+                  <Stack.Screen name="News" component={NewsScreen} />
+                  <Stack.Screen name="Article" component={NewsScreen} />
+                </Stack.Navigator>
+                <StatusBar />
+              </SafeAreaProvider>
+            </NavigationContainer>
+          </NotificationProvider>
         </GraphQLProvider>
       </PaperProvider>
     );
