@@ -1,9 +1,26 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "jsx": "react",
-    "jsx": "react",
-    "strict": true,
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "baseUrl": "./",
+    "paths": {
+      "~/*": ["./*"]
+    },
+    "incremental": true,
     "allowJs": false
-  }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"],
+  "typeRoots": ["./types"]
 }

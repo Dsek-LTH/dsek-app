@@ -8,6 +8,7 @@ import {
   Text as DefaultText,
   View as DefaultView,
   ScrollView as DefaultScrollView,
+  FlatList as DefaultFlatList,
 } from 'react-native';
 import DefaultMarkdown, {
   MarkdownProps as DefaultMarkdownProps,
@@ -39,6 +40,7 @@ type ThemeProps = {
 export type TextProps = ThemeProps & DefaultText['props'];
 export type ViewProps = ThemeProps & DefaultView['props'];
 export type ScrollViewProps = ThemeProps & DefaultScrollView['props'];
+export type FlatListProps = ThemeProps & DefaultFlatList['props'];
 export type MarkdownProps = ThemeProps & DefaultMarkdownProps & { children: ViewProps['children'] };
 
 export const Text = (props: TextProps) => {
@@ -60,6 +62,12 @@ export const ScrollView = (props: ScrollViewProps) => {
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
   return <DefaultScrollView contentContainerStyle={[{ backgroundColor }, style]} {...otherProps} />;
+};
+export const FlatList = (props: FlatListProps) => {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+
+  return <DefaultFlatList contentContainerStyle={[{ backgroundColor }, style]} {...otherProps} />;
 };
 
 export const Markdown = (props: MarkdownProps) => {
