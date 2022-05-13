@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { FlatList, Text } from '../../components/Themed';
-import { NewsPageQuery, useNewsPageQuery } from '../../generated/graphql';
+import { useNewsPageQuery } from '../../generated/graphql';
 import Article from './Article';
 
 const ArticleList = () => {
@@ -25,7 +25,6 @@ const ArticleList = () => {
       refreshing={false}
       onRefresh={() => refetch()}
       onEndReached={() => {
-        console.log('end');
         if (data.news.pageInfo.totalPages > loadedPages) {
           setAmountToLoad((current) => current + 10);
           setLoadedPages((current) => current + 1);

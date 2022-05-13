@@ -44,7 +44,7 @@ const createClient = () =>
 type GraphQLProviderProps = PropsWithChildren<{}>;
 
 function GraphQLProvider({ children }: GraphQLProviderProps) {
-  const [client, setClient] = useState(createClient());
+  const [client] = useState(createClient());
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 }
