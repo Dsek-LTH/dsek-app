@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useRef, useEffect } from 'react';
-import { AppState, StyleSheet } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { StyleSheet, AppState } from 'react-native';
 import { FlatList, Text } from '../../components/Themed';
 import { useNewsPageQuery } from '../../generated/graphql';
 import Article from './Article';
