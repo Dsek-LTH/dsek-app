@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { useRef, useEffect } from 'react';
+import { AppState, StyleSheet } from 'react-native';
 import { FlatList, Text } from '../../components/Themed';
 import { useNewsPageQuery } from '../../generated/graphql';
 import Article from './Article';
@@ -7,10 +8,24 @@ import Article from './Article';
 const ArticleList = () => {
   const [amountToLoad, setAmountToLoad] = React.useState(10);
   const [loadedPages, setLoadedPages] = React.useState(1);
-  const { loading, data, fetchMore, refetch } = useNewsPageQuery({
+  const { loading, data, refetch } = useNewsPageQuery({
     variables: { page_number: 0, per_page: amountToLoad },
   });
+  const appState = useRef(AppState.currentState);
   const articles = data?.news?.articles;
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        refetch();
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   if (loading) {
     return <Text>loading</Text>;
