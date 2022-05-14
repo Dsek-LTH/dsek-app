@@ -37,8 +37,8 @@ const App = () => {
     return (
       <PaperProvider theme={theme[colorScheme]}>
         <GraphQLProvider>
-          <NotificationProvider>
-            <NavigationContainer>
+          <NavigationContainer>
+            <NotificationProvider>
               <SafeAreaProvider>
                 <Stack.Navigator initialRouteName="News" screenOptions={screenOptions}>
                   <Stack.Screen name="News" component={NewsScreen} />
@@ -46,8 +46,8 @@ const App = () => {
                 </Stack.Navigator>
                 <StatusBar />
               </SafeAreaProvider>
-            </NavigationContainer>
-          </NotificationProvider>
+            </NotificationProvider>
+          </NavigationContainer>
         </GraphQLProvider>
       </PaperProvider>
     );
