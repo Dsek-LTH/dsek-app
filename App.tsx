@@ -11,10 +11,12 @@ import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import GraphQLProvider from './providers/GraphQLProvider';
 import NotificationProvider from './providers/NotificationProvider';
+import ArticleScreen from './screens/News/Article';
 import NewsScreen from './screens/News/News';
 import theme from './theme';
+import { RootStackParamList } from './types/navigation';
 
-const Stack = createNativeStackNavigator<{ News: undefined; Article: { id: string } }>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App = () => {
   const isLoadingComplete = useCachedResources();
@@ -40,7 +42,7 @@ const App = () => {
               <SafeAreaProvider>
                 <Stack.Navigator initialRouteName="News" screenOptions={screenOptions}>
                   <Stack.Screen name="News" component={NewsScreen} />
-                  <Stack.Screen name="Article" component={NewsScreen} />
+                  <Stack.Screen name="Article" component={ArticleScreen} />
                 </Stack.Navigator>
                 <StatusBar />
               </SafeAreaProvider>

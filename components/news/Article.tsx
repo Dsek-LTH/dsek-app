@@ -9,12 +9,16 @@ import theme from '~/theme';
 import { Link } from '@react-navigation/native';
 type Article = ArticleQuery['article'];
 
-const Article: React.FC<{ article: Article }> = ({ article }) => {
-  const markdown = truncateMarkdown(article.body, {
-    limit: article.imageUrl ? 370 : 560,
-    ellipsis: true,
-  });
-  const isTruncated = markdown.length < article.body.length;
+export type ArticleProps = { article: Article; showFull?: boolean };
+
+const Article: React.FC<ArticleProps> = ({ article, showFull }) => {
+  const markdown = showFull
+    ? article.body
+    : truncateMarkdown(article.body, {
+        limit: article.imageUrl ? 370 : 560,
+        ellipsis: true,
+      });
+  const isTruncated = !showFull && markdown.length < article.body.length;
   return (
     <Card style={styles.container} key={article.id}>
       {/* <Card.Title title={article.header} /> */}
