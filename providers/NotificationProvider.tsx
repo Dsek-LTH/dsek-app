@@ -7,7 +7,6 @@ const NotificationProvider: React.FC = ({ children }) => {
   const [uploadTokenMutation, { error }] = useUploadTokenMutation();
 
   React.useEffect(() => {
-    console.log('token', token);
     if (token) {
       uploadTokenMutation({ variables: { token } });
     }
