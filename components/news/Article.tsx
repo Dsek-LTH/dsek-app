@@ -7,11 +7,13 @@ import { Markdown, Text } from '../Themed';
 import truncateMarkdown from 'markdown-truncate';
 import theme from '~/theme';
 import { Link } from '@react-navigation/native';
+import DateTime from '~/helpers/datetime';
 type Article = ArticleQuery['article'];
 
 export type ArticleProps = { article: Article; showFull?: boolean };
 
 const Article: React.FC<ArticleProps> = ({ article, showFull }) => {
+  console.log(article.publishedDatetime);
   const markdown = showFull
     ? article.body
     : truncateMarkdown(article.body, {
@@ -38,7 +40,7 @@ const Article: React.FC<ArticleProps> = ({ article, showFull }) => {
         <View style={styles.bottom}>
           <Text style={styles.author}>{getSignature(article.author)}</Text>
           <Text style={styles.timestamp}>
-            {(article.publishedDatetime as string).substring(0, 9)}
+            {DateTime.formatReadableDateTime(new Date(article.publishedDatetime))}
           </Text>
         </View>
       </Card.Content>
