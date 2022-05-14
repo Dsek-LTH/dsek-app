@@ -3,6 +3,7 @@ import Article from '~/components/news/Article';
 import { FlatList, Text } from '~/components/Themed';
 import { useArticleQuery } from '~/generated/graphql';
 import { StyleSheet } from 'react-native';
+import ArticleSkeleton from './ArticleSkeleton';
 
 const SingleArticle = ({ id }) => {
   const { loading, /* error, */ data, refetch } = useArticleQuery({ variables: { id } });
@@ -10,7 +11,12 @@ const SingleArticle = ({ id }) => {
   const article = data?.article;
   if (loading) {
     return (
-      <FlatList data={['loading']} renderItem={() => <Text>loading</Text>} style={styles.list} />
+      <FlatList
+        style={styles.list}
+        renderItem={() => <ArticleSkeleton />}
+        data={[1]}
+        keyExtractor={(item) => item}
+      />
     );
   }
   if (!article) {

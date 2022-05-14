@@ -13,7 +13,6 @@ type Article = ArticleQuery['article'];
 export type ArticleProps = { article: Article; showFull?: boolean };
 
 const Article: React.FC<ArticleProps> = ({ article, showFull }) => {
-  console.log(article.publishedDatetime);
   const markdown = showFull
     ? article.body
     : truncateMarkdown(article.body, {
@@ -22,7 +21,7 @@ const Article: React.FC<ArticleProps> = ({ article, showFull }) => {
       });
   const isTruncated = !showFull && markdown.length < article.body.length;
   return (
-    <Card style={styles.container} key={article.id}>
+    <Card style={styles.container}>
       {/* <Card.Title title={article.header} /> */}
       <Card.Content>
         <Title style={styles.title}>{article.header}</Title>

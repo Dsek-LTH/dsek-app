@@ -4,6 +4,7 @@ import { StyleSheet, AppState } from 'react-native';
 import { FlatList, Text } from '../../components/Themed';
 import { useNewsPageQuery } from '../../generated/graphql';
 import Article from './Article';
+import ArticleSkeleton from './ArticleSkeleton';
 
 const ArticleList = () => {
   const [amountToLoad, setAmountToLoad] = React.useState(10);
@@ -28,7 +29,14 @@ const ArticleList = () => {
   }, []);
 
   if (loading) {
-    return <Text>loading</Text>;
+    return (
+      <FlatList
+        style={styles.container}
+        renderItem={() => <ArticleSkeleton />}
+        data={[1, 2, 3]}
+        keyExtractor={(item) => item}
+      />
+    );
   }
 
   return (
