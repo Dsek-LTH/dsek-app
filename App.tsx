@@ -4,6 +4,7 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
+import ApiAccessContext, { ApiAccessProvider } from './providers/ApiAccessProvider';
 import LoginProvider from './providers/LoginProvider';
 import NotificationProvider from './providers/NotificationProvider';
 import Screens from './Screens';
@@ -19,13 +20,15 @@ const App = () => {
     return (
       <PaperProvider theme={theme[colorScheme]}>
         <LoginProvider>
-          <NavigationContainer>
-            <NotificationProvider>
-              <SafeAreaProvider>
-                <Screens />
-              </SafeAreaProvider>
-            </NotificationProvider>
-          </NavigationContainer>
+          <ApiAccessProvider>
+            <NavigationContainer>
+              <NotificationProvider>
+                <SafeAreaProvider>
+                  <Screens />
+                </SafeAreaProvider>
+              </NotificationProvider>
+            </NavigationContainer>
+          </ApiAccessProvider>
         </LoginProvider>
       </PaperProvider>
     );

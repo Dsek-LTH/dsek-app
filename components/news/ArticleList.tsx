@@ -5,6 +5,7 @@ import { FlatList, Text } from '../../components/Themed';
 import { useNewsPageQuery } from '../../generated/graphql';
 import Article from './Article';
 import ArticleSkeleton from './ArticleSkeleton';
+import { hasAccess, useApiAccess } from '~/providers/ApiAccessProvider';
 
 const ArticleList = () => {
   const [amountToLoad, setAmountToLoad] = React.useState(10);
@@ -12,7 +13,11 @@ const ArticleList = () => {
   const { loading, data, refetch } = useNewsPageQuery({
     variables: { page_number: 0, per_page: amountToLoad },
   });
+
   const appState = useRef(AppState.currentState);
+
+  const apiContext = useApiAccess();
+
   const articles = data?.news?.articles;
 
   useEffect(() => {
@@ -47,6 +52,9 @@ const ArticleList = () => {
       keyExtractor={(article) => article.id}
       refreshing={false}
       onRefresh={() => refetch()}
+      ListHeaderComponent={
+        hasAccess(apiContext, 'news:article:create') ? <Text>You can create posts</Text> : undefined
+      }
       onEndReached={() => {
         if (data.news.pageInfo.totalPages > loadedPages) {
           setAmountToLoad((current) => current + 10);
