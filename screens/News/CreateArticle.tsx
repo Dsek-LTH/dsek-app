@@ -41,6 +41,7 @@ const CreateArticleScreen: React.FC<
   const [header, setHeader] = useState({ sv: '', en: '' });
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [imageName, setImageName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const [createArticleMutation, { loading }] = useCreateArticleMutation({
     variables: {
@@ -62,17 +63,19 @@ const CreateArticleScreen: React.FC<
   });
 
   const createArticle = async () => {
+    setIsLoading(true);
     // let fileType;
     // if (imageFile) {
     //   fileType = await FileType.fromBlob(imageFile);
     //   setImageName(`public/${uuidv4()}.${fileType.ext}`);
     // }
-
     const { data, errors } = await createArticleMutation();
+
     // if (imageFile) {
     //   putFile(data.article.create.uploadUrl, imageFile, fileType.mime, showMessage, t);
     // }
     if (!errors) {
+      setIsLoading(false);
       navigation.goBack();
     }
   };

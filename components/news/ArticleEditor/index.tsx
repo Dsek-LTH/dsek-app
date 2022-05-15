@@ -1,9 +1,9 @@
 import React from 'react';
+import { Button } from 'react-native-paper';
+import { Tabs, TabScreen } from 'react-native-paper-tabs';
+import { View } from '~/components/Themed';
+import { useApiAccess } from '~/providers/ApiAccessProvider';
 import ArticleEditorItem from './ArticleEditorItem';
-import { hasAccess, useApiAccess } from '~/providers/ApiAccessProvider';
-import { ScrollView, Text, View } from '~/components/Themed';
-import { Tabs, TabScreen, useTabIndex, useTabNavigation } from 'react-native-paper-tabs';
-import { KeyboardAvoidingView } from 'react-native';
 
 type TranslationObject = {
   sv: string;
@@ -69,7 +69,14 @@ export default function ArticleEditor({
 
   const Bottom = () => (
     <View style={{ flexGrow: 0, flexShrink: 0, flexBasis: 100 }}>
-      <Text>Bottom</Text>
+      <Button
+        disabled={!header.sv}
+        mode="contained"
+        style={{ width: 200, alignSelf: 'center' }}
+        contentStyle={{ paddingVertical: 8 }}
+        onPress={onSubmit}>
+        {loading ? 'Loading...' : saveButtonText}
+      </Button>
     </View>
   );
 

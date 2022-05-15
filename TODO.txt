@@ -1,7 +1,10 @@
 Create Article:
-- add publish button
-- add loading state to publish button
 - add image upload
+
+Edit Article:
+- Add edit button on articles
+- Add new screen (just show article for now, try "ArticleEdit" component if it "just works")
+- Add button to remove article
 
 App Wide:
 - Language Support
@@ -12,3 +15,9 @@ App Wide:
 
 Articles:
 - Image support
+
+
+Notifications:
+- Add tags on news (example: "Free Food", "Corporate Relations", "Sittning", "Pub")
+- Add options to filter Notifications by tags in app (settings page is necessary)
+- Add backend code to only send notifications to users that have subscribed to the tag (save in notifications )
