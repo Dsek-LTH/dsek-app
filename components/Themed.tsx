@@ -14,7 +14,6 @@ import DefaultMarkdown, {
   MarkdownProps as DefaultMarkdownProps,
 } from 'react-native-markdown-display';
 
-import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import theme from '../theme';
 
