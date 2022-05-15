@@ -6,6 +6,7 @@ import { useNewsPageQuery } from '../../generated/graphql';
 import Article from './Article';
 import ArticleSkeleton from './ArticleSkeleton';
 import { hasAccess, useApiAccess } from '~/providers/ApiAccessProvider';
+import { Button } from 'react-native-paper';
 
 const ArticleList = () => {
   const [amountToLoad, setAmountToLoad] = React.useState(10);
@@ -53,7 +54,16 @@ const ArticleList = () => {
       refreshing={false}
       onRefresh={() => refetch()}
       ListHeaderComponent={
-        hasAccess(apiContext, 'news:article:create') ? <Text>You can create posts</Text> : undefined
+        hasAccess(apiContext, 'news:article:create') ? (
+          <Button
+            mode="contained"
+            onPress={() => console.log('Creating post...')}
+            dark
+            style={styles.createButton}
+            contentStyle={styles.createButtonContent}>
+            Create new post
+          </Button>
+        ) : undefined
       }
       onEndReached={() => {
         if (data.news.pageInfo.totalPages > loadedPages) {
@@ -69,6 +79,13 @@ const ArticleList = () => {
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 32,
+  },
+  createButton: {
+    marginBottom: 16,
+    marginHorizontal: 8,
+  },
+  createButtonContent: {
+    paddingVertical: 8,
   },
 });
 
