@@ -1,8 +1,9 @@
 import React from 'react';
 import ArticleEditorItem from './ArticleEditorItem';
 import { hasAccess, useApiAccess } from '~/providers/ApiAccessProvider';
-import { Text, View } from '~/components/Themed';
+import { ScrollView, Text, View } from '~/components/Themed';
 import { Tabs, TabScreen, useTabIndex, useTabNavigation } from 'react-native-paper-tabs';
+import { KeyboardAvoidingView } from 'react-native';
 
 type TranslationObject = {
   sv: string;
@@ -23,7 +24,7 @@ type EditorProps = {
   removeArticle?: () => void;
   onSubmit: () => void;
   saveButtonText: string;
-  publishAsOptions: { id: string; label: string }[];
+  publishAsOptions: { value: string; label: string }[];
   mandateId: string;
   setMandateId: (value) => void;
 };
@@ -66,76 +67,50 @@ export default function ArticleEditor({
     });
   };
 
-  const Bottom = () => <Text>Bottom</Text>;
+  const Bottom = () => (
+    <View style={{ flexGrow: 0, flexShrink: 0, flexBasis: 100 }}>
+      <Text>Bottom</Text>
+    </View>
+  );
 
   return (
     <View style={{ flex: 1 }}>
       <Tabs
-        showTextLabel // true/false | default=false (KEEP PROVIDING LABEL WE USE IT AS KEY INTERNALLY + SCREEN READERS)
-        // dark={false} // works the same as AppBar in react-native-paper
-        // onChangeIndex={(newIndex) => {}} // react on index change
+      // dark={false} // works the same as AppBar in react-native-paper
+      // onChangeIndex={(newIndex) => {}} // react on index change
       >
         <TabScreen label="Svenska">
-          <>
-            <ArticleEditorItem
-              header={header.sv}
-              body={body.sv}
-              selectedTab={selectedTab}
-              onTabChange={onTabChange}
-              onHeaderChange={(event) => handleHeaderChange(event, 'sv')}
-              onBodyChange={(translation) => handleBodyChange(translation, 'sv')}
-              onImageChange={handleImageChange}
-              imageName={imageName}
-              publishAsOptions={publishAsOptions}
-              mandateId={mandateId}
-              setMandateId={setMandateId}
-            />
-            <Bottom />
-          </>
+          <ArticleEditorItem
+            header={header.sv}
+            body={body.sv}
+            selectedTab={selectedTab}
+            onTabChange={onTabChange}
+            onHeaderChange={(event) => handleHeaderChange(event, 'sv')}
+            onBodyChange={(translation) => handleBodyChange(translation, 'sv')}
+            onImageChange={handleImageChange}
+            imageName={imageName}
+            publishAsOptions={publishAsOptions}
+            mandateId={mandateId}
+            setMandateId={setMandateId}
+          />
         </TabScreen>
         <TabScreen label="Engelska">
-          <>
-            <ArticleEditorItem
-              header={header.en}
-              body={body.en}
-              selectedTab={selectedTab}
-              onTabChange={onTabChange}
-              onHeaderChange={(event) => handleHeaderChange(event, 'en')}
-              onBodyChange={(translation) => handleBodyChange(translation, 'en')}
-              onImageChange={handleImageChange}
-              imageName={imageName}
-              publishAsOptions={publishAsOptions}
-              mandateId={mandateId}
-              setMandateId={setMandateId}
-            />
-            <Bottom />
-          </>
+          <ArticleEditorItem
+            header={header.en}
+            body={body.en}
+            selectedTab={selectedTab}
+            onTabChange={onTabChange}
+            onHeaderChange={(event) => handleHeaderChange(event, 'en')}
+            onBodyChange={(translation) => handleBodyChange(translation, 'en')}
+            onImageChange={handleImageChange}
+            imageName={imageName}
+            publishAsOptions={publishAsOptions}
+            mandateId={mandateId}
+            setMandateId={setMandateId}
+          />
         </TabScreen>
       </Tabs>
-      {/* <Box>
-        <LoadingButton
-          style={{ marginRight: '1rem' }}
-          loading={loading}
-          loadingPosition="start"
-          startIcon={<SaveIcon />}
-          variant="outlined"
-          onClick={() => {
-            onSubmit();
-          }}>
-          {saveButtonText}
-        </LoadingButton>
-        {removeArticle && hasAccess(apiContext, 'news:article:delete') && (
-          <LoadingButton
-            color="error"
-            loading={removeLoading}
-            loadingPosition="start"
-            startIcon={<DeleteIcon />}
-            variant="outlined"
-            onClick={() => removeArticle()}>
-            {t('delete')}
-          </LoadingButton>
-        )}
-      </Box> */}
+      <Bottom />
     </View>
   );
 }

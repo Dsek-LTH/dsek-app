@@ -17,18 +17,18 @@ const CreateArticleScreen: React.FC<
 > = ({ navigation }) => {
   const keycloak = useKeycloak();
   const [mandateId, setMandateId] = useState('none');
-  const [publishAsOptions, setPublishAsOptions] = useState<{ id: string; label: string }[]>([
-    { id: 'none', label: '' },
+  const [publishAsOptions, setPublishAsOptions] = useState<{ value: string; label: string }[]>([
+    { value: 'none', label: '' },
   ]);
   const { user, loading: userLoading } = useUser();
 
   useEffect(() => {
     if (user) {
-      const me = { id: 'none', label: getFullName(user) };
+      const me = { value: 'none', label: getFullName(user) };
       setPublishAsOptions([
         me,
         ...user.mandates.map((mandate) => ({
-          id: mandate.id,
+          value: mandate.id,
           label: `${getFullName(user)}, ${mandate.position.name}`,
         })),
       ]);

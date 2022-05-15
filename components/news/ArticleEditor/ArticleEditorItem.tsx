@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 // @ts-ignore package does not have typescript types
 import { TextInput } from 'react-native-paper';
-import { View } from '~/components/Themed';
+import DropDown from 'react-native-paper-dropdown';
+import MarkdownEditor from '~/components/markdown/MarkdownEditor';
+import { ScrollView, View } from '~/components/Themed';
 import { useGetPresignedPutUrlMutation } from '~/generated/graphql';
 
 type EditorProps = {
@@ -13,7 +16,7 @@ type EditorProps = {
   onImageChange: (value: File) => void;
   imageName: string;
   onBodyChange: (value: string) => void;
-  publishAsOptions: { id: string; label: string }[];
+  publishAsOptions: { value: string; label: string }[];
   mandateId: string;
   setMandateId: (value) => void;
 };
@@ -31,7 +34,8 @@ export default function ArticleEditorItem({
   mandateId,
   setMandateId,
 }: EditorProps) {
-  const [fileName, setFileName] = React.useState('');
+  const [fileName, setFileName] = useState('');
+  const [showDropDown, setShowDropDown] = useState(false);
 
   const [getPresignedPutUrlMutation] = useGetPresignedPutUrlMutation({
     variables: {
@@ -52,67 +56,28 @@ export default function ArticleEditorItem({
   // };
 
   return (
-    <View style={{ marginHorizontal: 8, marginVertical: 16 }}>
-      <TextInput
-        mode="outlined"
-        label="Rubrik"
-        onChangeText={onHeaderChange}
-        multiline
-        value={header}
-      />
-      {/* <FormControl>
-        <InputLabel id="demo-simple-select-label">{t('news:publish_as')}</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          defaultValue="none"
+    <KeyboardAvoidingView behavior="padding" style={{ flexGrow: 1 }} keyboardVerticalOffset={120}>
+      <ScrollView style={{ flexGrow: 1, marginHorizontal: 8, marginVertical: 16 }}>
+        <TextInput
+          mode="outlined"
+          label="Rubrik"
+          onChangeText={onHeaderChange}
+          multiline
+          value={header}
+          style={{ marginBottom: 16 }}
+        />
+        <DropDown
+          label={'Publicera som'}
+          mode={'outlined'}
+          visible={showDropDown}
+          showDropDown={() => setShowDropDown(true)}
+          onDismiss={() => setShowDropDown(false)}
           value={mandateId}
-          label={t('news:publish_as')}
-          onChange={(event) => setMandateId(event.target.value)}>
-          {publishAsOptions.map((option) => (
-            <MenuItem key={option.id} value={option.id}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl> */}
-      {/* imageName && (
-        <Typography variant="subtitle1">
-          <Typography fontWeight={500}>Current image:</Typography>
-          {imageName}
-        </Typography>
-      )} */
-      /*  <label htmlFor="contained-button-file">
-        <Button variant="outlined" component="label" startIcon={<PhotoCamera />}>
-          {t('news:selectImage')}
-          <input
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={onImageChange}
-            id="contained-button-file"
-          />
-        </Button>
-      </label> */}
-
-      {/* <ReactMde
-        value={body}
-        onChange={onBodyChange}
-        selectedTab={selectedTab}
-        onTabChange={onTabChange}
-        l18n={{
-          write: t('news:write'),
-          preview: t('news:preview'),
-          uploadingImage: t('news:uploadingImage'),
-          pasteDropSelect: t('news:pasteDropSelect'),
-        }}
-        generateMarkdownPreview={(markdown) =>
-          Promise.resolve(<ReactMarkdown>{markdown}</ReactMarkdown>)
-        }
-        paste={{
-          saveImage,
-        }}
-      /> */}
-    </View>
+          setValue={setMandateId}
+          list={publishAsOptions}
+        />
+        <MarkdownEditor value={body} onChange={onBodyChange} style={{ marginVertical: 24 }} />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
