@@ -4,6 +4,7 @@ const customThemeProps = {
   colors: {
     primary: '#F280A1',
     accent: '#F280A1',
+    error: '#e22'
   },
 };
 

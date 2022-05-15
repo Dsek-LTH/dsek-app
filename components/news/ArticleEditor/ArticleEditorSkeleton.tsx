@@ -1,7 +1,8 @@
 import React from 'react';
+import { Text, View } from '~/components/Themed';
 
 export default function ArticleEditorSkeleton() {
-  return null;
+  return <Text>Loading</Text>;
   /* <Stack spacing={2}>
       <Typography variant="h1">
         <Skeleton />

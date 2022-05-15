@@ -10,8 +10,6 @@ import { useGetPresignedPutUrlMutation } from '~/generated/graphql';
 type EditorProps = {
   header: string;
   body: string;
-  selectedTab: 'write' | 'preview';
-  onTabChange: (tab: 'write' | 'preview') => void;
   onHeaderChange: (value: string) => void;
   onImageChange: (value: File) => void;
   imageName: string;
@@ -24,8 +22,6 @@ type EditorProps = {
 export default function ArticleEditorItem({
   header,
   body,
-  selectedTab,
-  onTabChange,
   onHeaderChange,
   onBodyChange,
   onImageChange,

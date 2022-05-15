@@ -1,10 +1,12 @@
 import { ArticleScreenParams } from "~/screens/News/Article"
-import { CreateArticleProps } from "~/screens/News/CreateArticle"
+import { CreateArticleParams } from "~/screens/News/CreateArticle"
+import { EditArticleParams } from "~/screens/News/EditArticle"
 import { NewsScreenParams } from "~/screens/News/News"
 
 export type RootStackParamList = {
   News: NewsScreenParams,
   Article: ArticleScreenParams
-  CreateArticle: CreateArticleProps
+  CreateArticle: CreateArticleParams
+  EditArticle: EditArticleParams
 }
 

@@ -1,18 +1,22 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Card, Title } from 'react-native-paper';
+import { Button, Card, Title } from 'react-native-paper';
 import { getSignature } from '~/helpers/authorFunctions';
 import { ArticleQuery } from '../../generated/graphql';
 import { Markdown, Text } from '../Themed';
 import truncateMarkdown from 'markdown-truncate';
 import theme from '~/theme';
-import { Link } from '@react-navigation/native';
+import { Link, NavigationProp, useNavigation } from '@react-navigation/native';
 import DateTime from '~/helpers/datetime';
+import { RootStackParamList } from '~/types/navigation';
+import { hasAccess, useApiAccess } from '~/providers/ApiAccessProvider';
 type Article = ArticleQuery['article'];
 
 export type ArticleProps = { article: Article; showFull?: boolean };
 
 const Article: React.FC<ArticleProps> = ({ article, showFull }) => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const apiAccess = useApiAccess();
   const markdown = showFull
     ? article.body
     : truncateMarkdown(article.body, {
@@ -37,10 +41,20 @@ const Article: React.FC<ArticleProps> = ({ article, showFull }) => {
           </Link>
         )}
         <View style={styles.bottom}>
-          <Text style={styles.author}>{getSignature(article.author)}</Text>
-          <Text style={styles.timestamp}>
-            {DateTime.formatReadableDateTime(new Date(article.publishedDatetime))}
-          </Text>
+          <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+            <View>
+              <Text style={styles.author}>{getSignature(article.author)}</Text>
+              <Text style={styles.timestamp}>
+                {DateTime.formatReadableDateTime(new Date(article.publishedDatetime))}
+              </Text>
+            </View>
+
+            {hasAccess(apiAccess, 'news:article:update') && (
+              <Button onPress={() => navigation.navigate('EditArticle', { id: article.id })}>
+                Edit
+              </Button>
+            )}
+          </View>
         </View>
       </Card.Content>
     </Card>

@@ -1,123 +1,132 @@
-import React from 'react';
-import { Button } from 'react-native-paper';
-import { Tabs, TabScreen } from 'react-native-paper-tabs';
-import { View } from '~/components/Themed';
-import { useApiAccess } from '~/providers/ApiAccessProvider';
-import ArticleEditorItem from './ArticleEditorItem';
+import { useKeycloak } from 'expo-keycloak-auth';
+import React, { useEffect, useState } from 'react';
+import ArticleEditorSkeleton from '~/components/news/ArticleEditor/ArticleEditorSkeleton';
+import { Text, View } from '~/components/Themed';
+import {
+  CreateArticleMutationVariables,
+  UpdateArticleMutationVariables,
+} from '~/generated/graphql';
+import { getFullName } from '~/helpers/memberFunctions';
+import { hasAccess, useApiAccess } from '~/providers/ApiAccessProvider';
+import { useUser } from '~/providers/UserProvider';
+import ArticleEditorDummy from './ArticleEditorDummy';
 
-type TranslationObject = {
-  sv: string;
-  en: string;
+const TYPE_TO_ACCESS = {
+  create: 'news:article:create',
+  update: 'news:article:update',
 };
 
-type EditorProps = {
-  header: TranslationObject;
-  onHeaderChange: (translation: TranslationObject) => void;
-  body: TranslationObject;
-  onBodyChange: (translation: TranslationObject) => void;
-  selectedTab: 'write' | 'preview';
-  onTabChange: (tab: 'write' | 'preview') => void;
-  onImageChange: (file: File) => void;
-  imageName: string;
-  loading: boolean;
-  removeLoading?: boolean;
-  removeArticle?: () => void;
-  onSubmit: () => void;
-  saveButtonText: string;
-  publishAsOptions: { value: string; label: string }[];
-  mandateId: string;
-  setMandateId: (value) => void;
-};
+type Props =
+  | {
+      type: 'create';
+      onSubmit: (values: CreateArticleMutationVariables) => Promise<void> | void;
+      defaults?: Partial<CreateArticleMutationVariables>;
+    }
+  | {
+      type: 'update';
+      onSubmit: (values: Omit<UpdateArticleMutationVariables, 'id'>) => Promise<void> | void;
+      defaults: Partial<UpdateArticleMutationVariables>;
+      onRemove: () => Promise<void>;
+    };
 
-export default function ArticleEditor({
-  header,
-  onHeaderChange,
-  body,
-  onBodyChange,
-  selectedTab,
-  onTabChange,
-  onImageChange,
-  imageName,
-  loading,
-  removeLoading,
-  onSubmit,
-  removeArticle,
-  saveButtonText,
-  publishAsOptions,
-  mandateId,
-  setMandateId,
-}: EditorProps) {
+const ArticleEditor: React.FC<Props> = (props) => {
+  const { type, onSubmit, defaults } = props; // Necessary for onRemove to work with TypeScript
+
+  const keycloak = useKeycloak();
+  const [mandateId, setMandateId] = useState(defaults?.mandateId ?? 'none');
+  const [publishAsOptions, setPublishAsOptions] = useState<{ value: string; label: string }[]>([
+    { value: 'none', label: '' },
+  ]);
+  const { user, loading: userLoading } = useUser();
+
+  useEffect(() => {
+    if (user) {
+      const me = { value: 'none', label: getFullName(user) };
+      setPublishAsOptions([
+        me,
+        ...user.mandates.map((mandate) => ({
+          value: mandate.id,
+          label: `${getFullName(user)}, ${mandate.position.name}`,
+        })),
+      ]);
+    }
+  }, [user]);
   const apiContext = useApiAccess();
 
-  const handleHeaderChange = (value: string, tag: string) => {
-    onHeaderChange({
-      ...header,
-      [tag]: value,
+  const [body, setBody] = useState({ sv: defaults?.body ?? '', en: defaults?.bodyEn ?? '' });
+  const [header, setHeader] = useState({
+    sv: defaults?.header ?? '',
+    en: defaults?.headerEn ?? '',
+  });
+  const [imageFile, setImageFile] = useState<File | undefined>(undefined);
+  const [imageName, setImageName] = useState(defaults?.imageName ?? '');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
+
+  const _onSubmit = async () => {
+    setIsLoading(true);
+    // let fileType;
+    // if (imageFile) {
+    //   fileType = await FileType.fromBlob(imageFile);
+    //   setImageName(`public/${uuidv4()}.${fileType.ext}`);
+    // }
+
+    // if (imageFile) {
+    //   putFile(data.article.create.uploadUrl, imageFile, fileType.mime, showMessage, t);
+    // }
+    await onSubmit({
+      header: header.sv,
+      headerEn: header.en,
+      body: body.sv,
+      bodyEn: body.en,
+      imageName: imageFile ? imageName : undefined,
+      mandateId: mandateId !== 'none' ? mandateId : undefined,
     });
+    setIsLoading(false);
   };
 
-  const handleImageChange = (value: File) => {
-    onImageChange(value);
-  };
+  const _onRemove =
+    type === 'update'
+      ? async () => {
+          setIsRemoving(true);
+          await props.onRemove();
+          setIsRemoving(false);
+        }
+      : undefined;
 
-  const handleBodyChange = (translation: string, languageTag: string) => {
-    onBodyChange({
-      ...body,
-      [languageTag]: translation,
-    });
-  };
+  if (!keycloak.ready || userLoading) {
+    return <ArticleEditorSkeleton />;
+  }
 
-  const Bottom = () => (
-    <View style={{ flexGrow: 0, flexShrink: 0, flexBasis: 100 }}>
-      <Button
-        disabled={!header.sv}
-        mode="contained"
-        style={{ width: 200, alignSelf: 'center' }}
-        contentStyle={{ paddingVertical: 8 }}
-        onPress={onSubmit}>
-        {loading ? 'Loading...' : saveButtonText}
-      </Button>
-    </View>
-  );
+  if (!keycloak?.isLoggedIn || !user) {
+    return <Text>You are not logged in.</Text>;
+  }
+
+  if (!hasAccess(apiContext, TYPE_TO_ACCESS[type])) {
+    return <Text>You do not have permissions to create articles.</Text>;
+  }
 
   return (
-    <View style={{ flex: 1 }}>
-      <Tabs
-      // dark={false} // works the same as AppBar in react-native-paper
-      // onChangeIndex={(newIndex) => {}} // react on index change
-      >
-        <TabScreen label="Svenska">
-          <ArticleEditorItem
-            header={header.sv}
-            body={body.sv}
-            selectedTab={selectedTab}
-            onTabChange={onTabChange}
-            onHeaderChange={(event) => handleHeaderChange(event, 'sv')}
-            onBodyChange={(translation) => handleBodyChange(translation, 'sv')}
-            onImageChange={handleImageChange}
-            imageName={imageName}
-            publishAsOptions={publishAsOptions}
-            mandateId={mandateId}
-            setMandateId={setMandateId}
-          />
-        </TabScreen>
-        <TabScreen label="Engelska">
-          <ArticleEditorItem
-            header={header.en}
-            body={body.en}
-            selectedTab={selectedTab}
-            onTabChange={onTabChange}
-            onHeaderChange={(event) => handleHeaderChange(event, 'en')}
-            onBodyChange={(translation) => handleBodyChange(translation, 'en')}
-            onImageChange={handleImageChange}
-            imageName={imageName}
-            publishAsOptions={publishAsOptions}
-            mandateId={mandateId}
-            setMandateId={setMandateId}
-          />
-        </TabScreen>
-      </Tabs>
-      <Bottom />
-    </View>
+    <ArticleEditorDummy
+      header={header}
+      onHeaderChange={setHeader}
+      body={body}
+      onBodyChange={setBody}
+      loading={isLoading}
+      onSubmit={_onSubmit}
+      saveButtonText={type === 'create' ? 'Publish' : 'Save'}
+      onImageChange={(file: File) => {
+        setImageFile(file);
+        setImageName(file.name);
+      }}
+      imageName={imageName}
+      publishAsOptions={publishAsOptions}
+      mandateId={mandateId}
+      setMandateId={setMandateId}
+      removeArticle={_onRemove}
+      removeLoading={isRemoving}
+    />
   );
-}
+};
+
+export default ArticleEditor;
