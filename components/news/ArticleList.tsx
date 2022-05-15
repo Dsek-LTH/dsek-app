@@ -7,6 +7,8 @@ import Article from './Article';
 import ArticleSkeleton from './ArticleSkeleton';
 import { hasAccess, useApiAccess } from '~/providers/ApiAccessProvider';
 import { Button } from 'react-native-paper';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '~/types/navigation';
 
 const ArticleList = () => {
   const [amountToLoad, setAmountToLoad] = React.useState(10);
@@ -16,8 +18,8 @@ const ArticleList = () => {
   });
 
   const appState = useRef(AppState.currentState);
-
   const apiContext = useApiAccess();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const articles = data?.news?.articles;
 
@@ -57,7 +59,7 @@ const ArticleList = () => {
         hasAccess(apiContext, 'news:article:create') ? (
           <Button
             mode="contained"
-            onPress={() => console.log('Creating post...')}
+            onPress={() => navigation.navigate('CreateArticle')}
             dark
             style={styles.createButton}
             contentStyle={styles.createButtonContent}>
