@@ -6,7 +6,9 @@ import {
   InMemoryCache,
 } from '@apollo/client';
 import { offsetLimitPagination } from '@apollo/client/utilities';
-import React, { PropsWithChildren, useState } from 'react';
+import { useKeycloak } from 'expo-keycloak-auth';
+import { setContext } from '@apollo/client/link/context';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 import { NewsPageQuery } from '~/generated/graphql';
 // import { GRAPHQL_ADDRESS } from '@env';
 
@@ -15,13 +17,13 @@ const apolloLink = new HttpLink({
   // uri: 'http://172.20.10.7:4000/graphql',
 });
 
-// const createAuthLink = (token) =>
-//   setContext((_, { headers }) => ({
-//     headers: {
-//       ...headers,
-//       authorization: token ? `Bearer ${token}` : '',
-//     },
-//   }));
+const createAuthLink = (token) =>
+  setContext((_, { headers }) => ({
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  }));
 
 const getCache = () => {
   return new InMemoryCache({
@@ -36,16 +38,22 @@ const getCache = () => {
   });
 };
 
-const createClient = () =>
+const createClient = (token?: string) =>
   new ApolloClient({
     cache: getCache(),
-    link: apolloLink,
+    link: token ? createAuthLink(token).concat(apolloLink) : apolloLink,
   });
 
 type GraphQLProviderProps = PropsWithChildren<{}>;
 
 function GraphQLProvider({ children }: GraphQLProviderProps) {
-  const [client] = useState(createClient());
+  const [client, setClient] = useState(createClient());
+  const keycloak = useKeycloak();
+
+  useEffect(() => {
+    const newClient = createClient(keycloak.token);
+    setClient(newClient);
+  }, [keycloak.token]);
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 }
