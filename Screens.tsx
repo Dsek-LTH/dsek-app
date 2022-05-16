@@ -14,6 +14,7 @@ import { RootStackParamList } from './types/navigation';
 import { useKeycloak } from 'expo-keycloak-auth';
 import CreateArticleScreen from './screens/News/CreateArticle';
 import EditArticleScreen from './screens/News/EditArticle';
+import DsekIcon from '~/components/Icons/DsekIcon';
 
 type Props = {};
 
@@ -48,7 +49,14 @@ const Screens = (props: Props) => {
   return (
     <View style={{ flex: 1 }}>
       <Stack.Navigator initialRouteName="News" screenOptions={screenOptions}>
-        <Stack.Screen name="News" component={NewsScreen} options={{ title: 'Nyheter' }} />
+        <Stack.Screen
+          name="News"
+          component={NewsScreen}
+          options={{
+            title: 'Nyheter',
+            headerLeft: () => <DsekIcon fill="white" width={24} height={24} />,
+          }}
+        />
         <Stack.Screen name="Article" component={ArticleScreen} options={{ title: 'Artikel' }} />
         <Stack.Screen
           name="CreateArticle"

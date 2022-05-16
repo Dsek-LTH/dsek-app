@@ -1,17 +1,24 @@
 Create Article:
-- add image upload
+- add image upload (prio 2)
 
 Articles:
-- Image support
+- Image support (prio 2)
+- Likes (prio 3)
 
 
 App Wide:
-- Fix log in/ log out to something better
-- Add branding
-- Language Support (wait with english support)
+- Fix log in/ log out to something better (prio 5)
+- Add branding (to be defined, prio 3)
+- Language Support (prio 1)
 
 
-Notifications:
+Notifications (prio 3):
 - Add tags on news (example: "Free Food", "Corporate Relations", "Sittning", "Pub")
 - Add options to filter Notifications by tags in app (settings page is necessary)
 - Add backend code to only send notifications to users that have subscribed to the tag (save in notifications )
+
+Events (prio 4):
+- Add screen for list of current Events (prio 4)
+- Add screen for info about specific event (prio 3)
+- Add screen for creating Events (prio 2)
+- Add screen for editing Events (prio 1)
