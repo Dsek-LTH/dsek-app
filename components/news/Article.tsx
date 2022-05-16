@@ -36,7 +36,7 @@ const Article: React.FC<ArticleProps> = ({ article, showFull }) => {
               darkColor={theme.dark.colors.primary}
               lightColor={theme.light.colors.primary}
               style={{ fontSize: 20 }}>
-              Read More
+              Läs mer
             </Text>
           </Link>
         )}
@@ -51,7 +51,7 @@ const Article: React.FC<ArticleProps> = ({ article, showFull }) => {
 
             {hasAccess(apiAccess, 'news:article:update') && (
               <Button onPress={() => navigation.navigate('EditArticle', { id: article.id })}>
-                Edit
+                Redigera
               </Button>
             )}
           </View>

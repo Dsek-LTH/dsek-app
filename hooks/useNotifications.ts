@@ -3,7 +3,6 @@ import * as Device from 'expo-device';
 import { useEffect, useRef, useState } from 'react';
 import { Platform, PlatformColor } from 'react-native';
 
-
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -33,13 +32,12 @@ const registerForPushNotificationsAsync = async () => {
   if (Platform.OS === 'android') {
     Notifications.setNotificationChannelAsync('default', {
       name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
+      importance: Notifications.AndroidImportance.HIGH,
+      // lightColor: '#FF231F7C',
     });
   }
-  return token
-}
+  return token;
+};
 
 const useNotifications = () => {
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -48,7 +46,7 @@ const useNotifications = () => {
   // const responseListener = useRef<any>();
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
     /* 
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
           setNotification(notification);
@@ -64,7 +62,7 @@ const useNotifications = () => {
         }; */
   }, []);
 
-  return expoPushToken
-}
+  return expoPushToken;
+};
 
-export default useNotifications
+export default useNotifications;

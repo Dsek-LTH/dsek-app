@@ -1,15 +1,16 @@
 Create Article:
 - add image upload
 
+Articles:
+- Image support
+
+
 App Wide:
-- Language Support (step 1: make everything swedish)
 - Correct names on tabs
 - Hide log in/log out on pages
 - Add icons
 - Add branding
-
-Articles:
-- Image support
+- Language Support (wait with english support)
 
 
 Notifications:

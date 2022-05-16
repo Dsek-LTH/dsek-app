@@ -63,7 +63,7 @@ const ArticleList = () => {
             dark
             style={styles.createButton}
             contentStyle={styles.createButtonContent}>
-            Create new post
+            Skapa inlägg
           </Button>
         ) : undefined
       }

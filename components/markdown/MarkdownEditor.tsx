@@ -12,10 +12,10 @@ const MarkdownEditor: React.FC<Props> = ({ value, onChange, style }) => {
     <View style={{ ...styles.container, ...(style ?? {}) }}>
       {/* <Tabs style={{ ...styles.container, ...(style ?? {}) }}> */}
       <Tabs disableSwipe>
-        <TabScreen label="Edit">
-          <TextInput multiline value={value} onChangeText={onChange} label="Body" />
+        <TabScreen label="Redigera">
+          <TextInput multiline value={value} onChangeText={onChange} label="Beskrivning" />
         </TabScreen>
-        <TabScreen label="Preview">
+        <TabScreen label="Förhandsvisa">
           <Markdown>{value}</Markdown>
         </TabScreen>
       </Tabs>

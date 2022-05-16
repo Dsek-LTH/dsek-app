@@ -34,11 +34,11 @@ const Screens = (props: Props) => {
         keycloak.ready ? (
           keycloak.isLoggedIn ? (
             <TouchableOpacity onPress={() => keycloak.logout()}>
-              <Text>Log out</Text>
+              <Text>Logga ut</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity onPress={() => keycloak.login()}>
-              <Text>Log in</Text>
+              <Text>Logga in</Text>
             </TouchableOpacity>
           )
         ) : undefined,
@@ -48,10 +48,18 @@ const Screens = (props: Props) => {
   return (
     <View style={{ flex: 1 }}>
       <Stack.Navigator initialRouteName="News" screenOptions={screenOptions}>
-        <Stack.Screen name="News" component={NewsScreen} />
-        <Stack.Screen name="Article" component={ArticleScreen} />
-        <Stack.Screen name="CreateArticle" component={CreateArticleScreen} />
-        <Stack.Screen name="EditArticle" component={EditArticleScreen} />
+        <Stack.Screen name="News" component={NewsScreen} options={{ title: 'Nyheter' }} />
+        <Stack.Screen name="Article" component={ArticleScreen} options={{ title: 'Artikel' }} />
+        <Stack.Screen
+          name="CreateArticle"
+          component={CreateArticleScreen}
+          options={{ title: 'Skapa Artikel' }}
+        />
+        <Stack.Screen
+          name="EditArticle"
+          component={EditArticleScreen}
+          options={{ title: 'Redigera Artikel' }}
+        />
       </Stack.Navigator>
       <StatusBar />
     </View>

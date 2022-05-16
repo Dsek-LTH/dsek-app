@@ -44,8 +44,6 @@ const ArticleEditorDummy: React.FC<EditorProps> = ({
   mandateId,
   setMandateId,
 }) => {
-  const apiContext = useApiAccess();
-
   const handleHeaderChange = (value: string, tag: string) => {
     onHeaderChange({
       ...header,

@@ -21,7 +21,7 @@ const SingleArticle = ({ id }) => {
   }
   if (!article) {
     return (
-      <FlatList data={['loading']} renderItem={() => <Text>loading</Text>} style={styles.list} />
+      <FlatList data={['loading']} renderItem={() => <Text>Laddar</Text>} style={styles.list} />
     );
   }
 

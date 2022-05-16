@@ -99,11 +99,11 @@ const ArticleEditor: React.FC<Props> = (props) => {
   }
 
   if (!keycloak?.isLoggedIn || !user) {
-    return <Text>You are not logged in.</Text>;
+    return <Text>Du är inte inloggad.</Text>;
   }
 
   if (!hasAccess(apiContext, TYPE_TO_ACCESS[type])) {
-    return <Text>You do not have permissions to create articles.</Text>;
+    return <Text>Du har inte behörighet att se denna sidan.</Text>;
   }
 
   return (
@@ -114,7 +114,7 @@ const ArticleEditor: React.FC<Props> = (props) => {
       onBodyChange={setBody}
       loading={isLoading}
       onSubmit={_onSubmit}
-      saveButtonText={type === 'create' ? 'Publish' : 'Save'}
+      saveButtonText={type === 'create' ? 'Publicera' : 'Spara'}
       onImageChange={(file: File) => {
         setImageFile(file);
         setImageName(file.name);
