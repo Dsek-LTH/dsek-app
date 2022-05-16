@@ -41,8 +41,8 @@ const Article: React.FC<ArticleProps> = ({ article, showFull }) => {
           </Link>
         )}
         <View style={styles.bottom}>
-          <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-            <View>
+          <View style={{ justifyContent: 'space-between', flexDirection: 'row', maxWidth: '100%' }}>
+            <View style={{ flexShrink: 1 }}>
               <Text style={styles.author}>{getSignature(article.author)}</Text>
               <Text style={styles.timestamp}>
                 {DateTime.formatReadableDateTime(new Date(article.publishedDatetime))}
@@ -50,7 +50,9 @@ const Article: React.FC<ArticleProps> = ({ article, showFull }) => {
             </View>
 
             {hasAccess(apiAccess, 'news:article:update') && (
-              <Button onPress={() => navigation.navigate('EditArticle', { id: article.id })}>
+              <Button
+                onPress={() => navigation.navigate('EditArticle', { id: article.id })}
+                style={{}}>
                 Redigera
               </Button>
             )}

@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Article from '~/components/news/Article';
 import { FlatList, Text } from '~/components/Themed';
 import { useArticleQuery } from '~/generated/graphql';
 import { StyleSheet } from 'react-native';
 import ArticleSkeleton from './ArticleSkeleton';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '~/types/navigation';
 
 const SingleArticle = ({ id }) => {
   const { loading, /* error, */ data, refetch } = useArticleQuery({ variables: { id } });
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const article = data?.article;
+  useEffect(() => {
+    if (loading || !article) return;
+    navigation.setOptions({ title: article.header });
+  }, [article, loading]);
   if (loading) {
     return (
       <FlatList
