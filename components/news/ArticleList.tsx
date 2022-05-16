@@ -5,6 +5,10 @@ import { FlatList, Text } from '../../components/Themed';
 import { useNewsPageQuery } from '../../generated/graphql';
 import Article from './Article';
 import ArticleSkeleton from './ArticleSkeleton';
+import { hasAccess, useApiAccess } from '~/providers/ApiAccessProvider';
+import { Button } from 'react-native-paper';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '~/types/navigation';
 
 const ArticleList = () => {
   const [amountToLoad, setAmountToLoad] = React.useState(10);
@@ -12,7 +16,11 @@ const ArticleList = () => {
   const { loading, data, refetch } = useNewsPageQuery({
     variables: { page_number: 0, per_page: amountToLoad },
   });
+
   const appState = useRef(AppState.currentState);
+  const apiContext = useApiAccess();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   const articles = data?.news?.articles;
 
   useEffect(() => {
@@ -47,6 +55,18 @@ const ArticleList = () => {
       keyExtractor={(article) => article.id}
       refreshing={false}
       onRefresh={() => refetch()}
+      ListHeaderComponent={
+        hasAccess(apiContext, 'news:article:create') ? (
+          <Button
+            mode="contained"
+            onPress={() => navigation.navigate('CreateArticle')}
+            dark
+            style={styles.createButton}
+            contentStyle={styles.createButtonContent}>
+            Create new post
+          </Button>
+        ) : undefined
+      }
       onEndReached={() => {
         if (data.news.pageInfo.totalPages > loadedPages) {
           setAmountToLoad((current) => current + 10);
@@ -61,6 +81,13 @@ const ArticleList = () => {
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 32,
+  },
+  createButton: {
+    marginBottom: 16,
+    marginHorizontal: 8,
+  },
+  createButtonContent: {
+    paddingVertical: 8,
   },
 });
 
