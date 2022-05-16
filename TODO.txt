@@ -6,8 +6,12 @@ Articles:
 - Likes (prio 3)
 
 
+Account page (prio 5)
+- Add icon button in header or add bottom tab nav
+- Add account page
+- Add login / logout buttons 
+
 App Wide:
-- Fix log in/ log out to something better (prio 5)
 - Add branding (to be defined, prio 3)
 - Language Support (prio 1)
 
