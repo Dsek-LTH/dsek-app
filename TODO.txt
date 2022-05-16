@@ -6,9 +6,7 @@ Articles:
 
 
 App Wide:
-- Correct names on tabs
-- Hide log in/log out on pages
-- Add icons
+- Fix log in/ log out to something better
 - Add branding
 - Language Support (wait with english support)
 

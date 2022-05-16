@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'react-native-paper';
 import { Tabs, TabScreen } from 'react-native-paper-tabs';
-import { View } from '~/components/Themed';
+import { Text, View } from '~/components/Themed';
 import { useApiAccess } from '~/providers/ApiAccessProvider';
 import theme from '~/theme';
 import ArticleEditorItem from './ArticleEditorItem';
@@ -76,8 +76,11 @@ const ArticleEditorDummy: React.FC<EditorProps> = ({
         mode="contained"
         style={{ width: removeArticle ? '40%' : '60%', alignSelf: 'center' }}
         contentStyle={{ paddingVertical: 8 }}
-        onPress={onSubmit}>
-        {loading ? 'Loading...' : saveButtonText}
+        onPress={onSubmit}
+        icon={removeArticle ? 'content-save' : 'upload'}
+        labelStyle={{ fontSize: 20 }}
+        dark>
+        <Text style={{ fontSize: 16 }}>{loading ? 'Loading...' : saveButtonText}</Text>
       </Button>
       {removeArticle && (
         <Button
@@ -86,8 +89,10 @@ const ArticleEditorDummy: React.FC<EditorProps> = ({
           color={theme['dark'].colors.error}
           style={{ width: '40%', alignSelf: 'center' }}
           contentStyle={{ paddingVertical: 8 }}
-          onPress={removeArticle}>
-          {removeLoading ? 'Loading...' : 'Delete'}
+          onPress={removeArticle}
+          icon="delete-forever"
+          labelStyle={{ fontSize: 20 }}>
+          <Text style={{ fontSize: 16 }}>{removeLoading ? 'Loading...' : 'Delete'}</Text>
         </Button>
       )}
     </View>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Card, Title } from 'react-native-paper';
+import { Button, Card, IconButton, Title } from 'react-native-paper';
 import { getSignature } from '~/helpers/authorFunctions';
 import { ArticleQuery } from '../../generated/graphql';
 import { Markdown, Text } from '../Themed';
@@ -10,6 +10,7 @@ import { Link, NavigationProp, useNavigation } from '@react-navigation/native';
 import DateTime from '~/helpers/datetime';
 import { RootStackParamList } from '~/types/navigation';
 import { hasAccess, useApiAccess } from '~/providers/ApiAccessProvider';
+import useColorScheme from '~/hooks/useColorScheme';
 type Article = ArticleQuery['article'];
 
 export type ArticleProps = { article: Article; showFull?: boolean };
@@ -17,6 +18,8 @@ export type ArticleProps = { article: Article; showFull?: boolean };
 const Article: React.FC<ArticleProps> = ({ article, showFull }) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const apiAccess = useApiAccess();
+  const colorScheme = useColorScheme();
+
   const markdown = showFull
     ? article.body
     : truncateMarkdown(article.body, {
@@ -50,11 +53,17 @@ const Article: React.FC<ArticleProps> = ({ article, showFull }) => {
             </View>
 
             {hasAccess(apiAccess, 'news:article:update') && (
-              <Button
+              // <Button
+              //   onPress={() => navigation.navigate('EditArticle', { id: article.id })}
+              //   labelStyle={{ marginLeft: 8 }}
+              //   icon="pencil">
+              //   Redigera
+              // </Button>
+              <IconButton
                 onPress={() => navigation.navigate('EditArticle', { id: article.id })}
-                style={{}}>
-                Redigera
-              </Button>
+                color={theme[colorScheme].colors.primary}
+                icon="pencil"
+              />
             )}
           </View>
         </View>

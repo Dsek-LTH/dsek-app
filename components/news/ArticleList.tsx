@@ -9,6 +9,7 @@ import { hasAccess, useApiAccess } from '~/providers/ApiAccessProvider';
 import { Button } from 'react-native-paper';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '~/types/navigation';
+import { Ionicons } from '@expo/vector-icons';
 
 const ArticleList = () => {
   const [amountToLoad, setAmountToLoad] = React.useState(10);
@@ -62,8 +63,10 @@ const ArticleList = () => {
             onPress={() => navigation.navigate('CreateArticle')}
             dark
             style={styles.createButton}
-            contentStyle={styles.createButtonContent}>
-            Skapa inlägg
+            contentStyle={styles.createButtonContent}
+            icon="plus-box"
+            labelStyle={{ fontSize: 24 }}>
+            <Text style={{ fontSize: 16 }}>Skapa inlägg</Text>
           </Button>
         ) : undefined
       }
@@ -85,6 +88,7 @@ const styles = StyleSheet.create({
   createButton: {
     marginBottom: 16,
     marginHorizontal: 8,
+    padding: 0,
   },
   createButtonContent: {
     paddingVertical: 8,
