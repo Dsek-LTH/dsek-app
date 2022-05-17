@@ -1,3 +1,4 @@
+import { AccountScreenParams } from "~/screens/Account"
 import { ArticleScreenParams } from "~/screens/News/Article"
 import { CreateArticleParams } from "~/screens/News/CreateArticle"
 import { EditArticleParams } from "~/screens/News/EditArticle"
@@ -8,6 +9,10 @@ export type NewsStackParamList = {
   Article: ArticleScreenParams
   CreateArticle: CreateArticleParams
   EditArticle: EditArticleParams
+}
+
+export type AccountStackParamList = {
+  Account: AccountScreenParams,
 }
 
 export type RootTabParamList = {

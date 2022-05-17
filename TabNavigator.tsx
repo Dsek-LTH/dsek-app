@@ -4,6 +4,8 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { View } from './components/Themed';
 import useColorScheme from './hooks/useColorScheme';
+import AccountScreen from './screens/Account';
+import AccountStackNavigator from './screens/Account/AccountNavigator';
 import NewsStackNavigator from './screens/News/StackNavigator';
 import theme from './theme';
 import { RootTabParamList } from './types/navigation';
@@ -37,7 +39,7 @@ const TabNavigator: React.FC<Props> = (props) => {
         />
         <Tab.Screen
           name="account-tab"
-          component={NewsStackNavigator}
+          component={AccountStackNavigator}
           options={{
             title: 'Konto',
             tabBarIcon: (props) => (

@@ -7,20 +7,17 @@ import React, { useMemo } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import useColorScheme from '../../hooks/useColorScheme';
-import ArticleScreen from './Article';
-import NewsScreen from './News';
 import theme from '../../theme';
-import { NewsStackParamList } from '../../types/navigation';
+import { AccountStackParamList, NewsStackParamList } from '../../types/navigation';
 import { useKeycloak } from 'expo-keycloak-auth';
-import CreateArticleScreen from './CreateArticle';
-import EditArticleScreen from './EditArticle';
 import DsekIcon from '~/components/Icons/DsekIcon';
+import AccountScreen from '.';
 
 type Props = {};
 
-const Stack = createNativeStackNavigator<NewsStackParamList>();
+const Stack = createNativeStackNavigator<AccountStackParamList>();
 
-const NewsStackNavigator: React.FC<Props> = (props) => {
+const AccountStackNavigator: React.FC<Props> = (props) => {
   const colorScheme = useColorScheme();
 
   const screenOptions: NativeStackNavigationOptions = {
@@ -33,25 +30,14 @@ const NewsStackNavigator: React.FC<Props> = (props) => {
   };
   return (
     <View style={{ flex: 1 }}>
-      <Stack.Navigator initialRouteName="News" screenOptions={screenOptions}>
+      <Stack.Navigator initialRouteName="Account" screenOptions={screenOptions}>
         <Stack.Screen
-          name="News"
-          component={NewsScreen}
+          name="Account"
+          component={AccountScreen}
           options={{
-            title: 'Nyheter',
+            title: 'Konto',
             headerLeft: () => <DsekIcon fill="white" width={24} height={24} />,
           }}
-        />
-        <Stack.Screen name="Article" component={ArticleScreen} options={{ title: 'Artikel' }} />
-        <Stack.Screen
-          name="CreateArticle"
-          component={CreateArticleScreen}
-          options={{ title: 'Skapa Artikel' }}
-        />
-        <Stack.Screen
-          name="EditArticle"
-          component={EditArticleScreen}
-          options={{ title: 'Redigera Artikel' }}
         />
       </Stack.Navigator>
       <StatusBar />
@@ -59,4 +45,4 @@ const NewsStackNavigator: React.FC<Props> = (props) => {
   );
 };
 
-export default NewsStackNavigator;
+export default AccountStackNavigator;
