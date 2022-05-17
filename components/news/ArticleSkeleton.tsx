@@ -6,10 +6,10 @@ import { getSignature } from '~/helpers/authorFunctions';
 import DateTime from '~/helpers/datetime';
 import theme from '~/theme';
 import { Markdown, Text } from '../Themed';
-import Skeleton from '../ui/Skeleton';
+import Skeleton, { SKELETON_DELAY_STEP } from '../ui/Skeleton';
 // import SkeletonContent from 'react-native-skeleton-content';
 
-const DELAY_STEP = 50;
+const DELAY_STEP = SKELETON_DELAY_STEP / 2;
 
 const ArticleSkeleton: React.FC = () => {
   const dimensions = useWindowDimensions();

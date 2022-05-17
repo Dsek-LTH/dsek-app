@@ -2,16 +2,16 @@ Create Article:
 - add image upload (prio 2)
 
 Articles:
-- Image support (prio 2)
 - Likes (prio 3)
+- Image support (prio 2)
 
 
-Account page (prio 5)
-- Add icon button in header or add bottom tab nav
-- Add account page
-- Add login / logout buttons 
+Account page:
+- Add ability to edit info (new screen?) (prio 2)
+- Add user profile picture (prio 1)
 
 App Wide:
+- Add app icon (prio 5)
 - Add branding (to be defined, prio 3)
 - Language Support (prio 1)
 

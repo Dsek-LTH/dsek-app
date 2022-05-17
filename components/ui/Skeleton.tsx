@@ -10,6 +10,8 @@ type Props = {
   roundness?: number;
 };
 
+export const SKELETON_DELAY_STEP = 100;
+
 const Skeleton: React.FC<Props> = ({ width, height, delay, color, roundness }) => {
   const dimensions = useWindowDimensions();
   const circleAnimatedValue = new Animated.Value(0);
