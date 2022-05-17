@@ -8,7 +8,7 @@ import truncateMarkdown from 'markdown-truncate';
 import theme from '~/theme';
 import { Link, NavigationProp, useNavigation } from '@react-navigation/native';
 import DateTime from '~/helpers/datetime';
-import { RootStackParamList } from '~/types/navigation';
+import { NewsStackParamList } from '~/types/navigation';
 import { hasAccess, useApiAccess } from '~/providers/ApiAccessProvider';
 import useColorScheme from '~/hooks/useColorScheme';
 type Article = ArticleQuery['article'];
@@ -16,7 +16,7 @@ type Article = ArticleQuery['article'];
 export type ArticleProps = { article: Article; showFull?: boolean };
 
 const Article: React.FC<ArticleProps> = ({ article, showFull }) => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NavigationProp<NewsStackParamList>>();
   const apiAccess = useApiAccess();
   const colorScheme = useColorScheme();
 

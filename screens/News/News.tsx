@@ -3,11 +3,11 @@ import * as React from 'react';
 import DsekIcon from '~/components/Icons/DsekIcon';
 import ArticleList from '~/components/news/ArticleList';
 import { View } from '~/components/Themed';
-import { RootStackParamList } from '~/types/navigation';
+import { NewsStackParamList } from '~/types/navigation';
 
 export type NewsScreenParams = undefined;
 
-const NewsScreen: React.FC<NativeStackScreenProps<RootStackParamList, 'News'>> = () => {
+const NewsScreen: React.FC<NativeStackScreenProps<NewsStackParamList, 'News'>> = () => {
   return (
     <View style={{ flex: 1 }}>
       <ArticleList />

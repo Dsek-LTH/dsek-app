@@ -5,22 +5,23 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import React, { useMemo } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { Text, View } from './components/Themed';
-import useColorScheme from './hooks/useColorScheme';
-import ArticleScreen from './screens/News/Article';
-import NewsScreen from './screens/News/News';
-import theme from './theme';
-import { RootStackParamList } from './types/navigation';
+import { Text, View } from '../../components/Themed';
+import useColorScheme from '../../hooks/useColorScheme';
+import ArticleScreen from './Article';
+import NewsScreen from './News';
+import theme from '../../theme';
+import { NewsStackParamList } from '../../types/navigation';
 import { useKeycloak } from 'expo-keycloak-auth';
-import CreateArticleScreen from './screens/News/CreateArticle';
-import EditArticleScreen from './screens/News/EditArticle';
+import CreateArticleScreen from './CreateArticle';
+import EditArticleScreen from './EditArticle';
 import DsekIcon from '~/components/Icons/DsekIcon';
 
 type Props = {};
 
-const Screens = (props: Props) => {
+const Stack = createNativeStackNavigator<NewsStackParamList>();
+
+const NewsStackNavigator: React.FC<Props> = (props) => {
   const colorScheme = useColorScheme();
-  const Stack = createNativeStackNavigator<RootStackParamList>();
   const keycloak = useKeycloak();
 
   const screenOptions: NativeStackNavigationOptions = useMemo(
@@ -74,4 +75,4 @@ const Screens = (props: Props) => {
   );
 };
 
-export default Screens;
+export default NewsStackNavigator;

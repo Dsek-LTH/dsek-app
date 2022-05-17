@@ -9,11 +9,11 @@ import {
   useRemoveArticleMutation,
   useUpdateArticleMutation,
 } from '~/generated/graphql';
-import { RootStackParamList } from '~/types/navigation';
+import { NewsStackParamList } from '~/types/navigation';
 
 export type EditArticleParams = { id: string };
 
-const EditArticleScreen: React.FC<NativeStackScreenProps<RootStackParamList, 'EditArticle'>> = ({
+const EditArticleScreen: React.FC<NativeStackScreenProps<NewsStackParamList, 'EditArticle'>> = ({
   navigation,
   route,
 }) => {

@@ -3,10 +3,14 @@ import { CreateArticleParams } from "~/screens/News/CreateArticle"
 import { EditArticleParams } from "~/screens/News/EditArticle"
 import { NewsScreenParams } from "~/screens/News/News"
 
-export type RootStackParamList = {
+export type NewsStackParamList = {
   News: NewsScreenParams,
   Article: ArticleScreenParams
   CreateArticle: CreateArticleParams
   EditArticle: EditArticleParams
 }
 
+export type RootTabParamList = {
+  'news-tab': undefined
+  'account-tab': undefined
+}

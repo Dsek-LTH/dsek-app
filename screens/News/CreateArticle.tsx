@@ -3,12 +3,12 @@ import React from 'react';
 import ArticleEditor from '~/components/news/ArticleEditor';
 import { View } from '~/components/Themed';
 import { CreateArticleMutationVariables, useCreateArticleMutation } from '~/generated/graphql';
-import { RootStackParamList } from '~/types/navigation';
+import { NewsStackParamList } from '~/types/navigation';
 
 export type CreateArticleParams = undefined;
 
 const CreateArticleScreen: React.FC<
-  NativeStackScreenProps<RootStackParamList, 'CreateArticle'>
+  NativeStackScreenProps<NewsStackParamList, 'CreateArticle'>
 > = ({ navigation }) => {
   const [createArticleMutation] = useCreateArticleMutation({
     onCompleted: () => {

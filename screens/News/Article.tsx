@@ -6,10 +6,10 @@ import { FlatList, Text, View } from '~/components/Themed';
 import { useArticleQuery } from '~/generated/graphql';
 import useColorScheme from '~/hooks/useColorScheme';
 import theme from '~/theme';
-import { RootStackParamList } from '~/types/navigation';
+import { NewsStackParamList } from '~/types/navigation';
 export type ArticleScreenParams = { id: string };
 
-const ArticleScreen: React.FC<NativeStackScreenProps<RootStackParamList, 'Article'>> = ({
+const ArticleScreen: React.FC<NativeStackScreenProps<NewsStackParamList, 'Article'>> = ({
   route,
   navigation,
 }) => {

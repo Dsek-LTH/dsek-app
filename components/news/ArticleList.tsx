@@ -8,7 +8,7 @@ import ArticleSkeleton from './ArticleSkeleton';
 import { hasAccess, useApiAccess } from '~/providers/ApiAccessProvider';
 import { Button } from 'react-native-paper';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '~/types/navigation';
+import { NewsStackParamList } from '~/types/navigation';
 import { Ionicons } from '@expo/vector-icons';
 
 const ArticleList = () => {
@@ -20,7 +20,7 @@ const ArticleList = () => {
 
   const appState = useRef(AppState.currentState);
   const apiContext = useApiAccess();
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NavigationProp<NewsStackParamList>>();
 
   const articles = data?.news?.articles;
 

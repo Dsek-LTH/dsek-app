@@ -5,11 +5,11 @@ import { useArticleQuery } from '~/generated/graphql';
 import { StyleSheet } from 'react-native';
 import ArticleSkeleton from './ArticleSkeleton';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '~/types/navigation';
+import { NewsStackParamList } from '~/types/navigation';
 
 const SingleArticle = ({ id }) => {
   const { loading, /* error, */ data, refetch } = useArticleQuery({ variables: { id } });
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NavigationProp<NewsStackParamList>>();
 
   const article = data?.article;
   useEffect(() => {

@@ -8,7 +8,7 @@ import { ApiAccessProvider } from './providers/ApiAccessProvider';
 import LoginProvider from './providers/LoginProvider';
 import NotificationProvider from './providers/NotificationProvider';
 import { UserProvider } from './providers/UserProvider';
-import Screens from './Screens';
+import TabNavigator from './TabNavigator';
 import theme from './theme';
 
 const App = () => {
@@ -26,7 +26,7 @@ const App = () => {
               <NavigationContainer>
                 <NotificationProvider>
                   <SafeAreaProvider>
-                    <Screens />
+                    <TabNavigator />
                   </SafeAreaProvider>
                 </NotificationProvider>
               </NavigationContainer>

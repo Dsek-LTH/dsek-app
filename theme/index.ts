@@ -3,7 +3,7 @@ import { DarkTheme, DefaultTheme } from 'react-native-paper';
 const customThemeProps = {
   colors: {
     primary: '#F280A1',
-    accent: '#F280A1',
+    accent: '#9966CC',
     error: '#e22'
   },
 };
