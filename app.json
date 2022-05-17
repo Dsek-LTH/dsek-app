@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "D-Sek",
+    "name": "D-sektionen",
     "slug": "dsek-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,16 +10,20 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#f280a1"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "bundleIdentifier": "se.dsek",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
     },
     "android": {
+      "package": "se.dsek",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
