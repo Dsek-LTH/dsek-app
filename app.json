@@ -2,7 +2,7 @@
   "expo": {
     "name": "D-sektionen",
     "slug": "dsek-app",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "dsek",
@@ -41,6 +41,11 @@
           "color": "#ffffff"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "1e625b79-dfbd-4e9c-802f-3e8451ad87e6"
+      }
+    }
   }
 }
