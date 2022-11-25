@@ -4,7 +4,7 @@ module.exports = function (api) {
     presets: ['babel-preset-expo'],
     env: {
       production: {
-        plugins: ['react-native-paper/babel', 'transform-react-jsx-source'],
+        plugins: ['react-native-paper/babel', '@babel/transform-react-jsx-source'],
       },
     },
     plugins: [

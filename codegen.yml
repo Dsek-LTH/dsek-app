@@ -1,5 +1,5 @@
 overwrite: true
-schema: 'http://172.20.10.7:4000/graphql'
+schema: 'https://graphql.api.sandbox.dsek.se/graphql'
 documents: './**/*.graphql'
 generates:
   generated/graphql.tsx:
