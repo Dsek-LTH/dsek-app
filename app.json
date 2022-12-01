@@ -17,9 +17,9 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "bundleIdentifier": "se.dsek",
+      "bundleIdentifier": "se.dsek.member",
       "buildNumber": "1.0.0",
-      "supportsTablet": true
+      "supportsTablet": false
     },
     "android": {
       "package": "se.dsek",
