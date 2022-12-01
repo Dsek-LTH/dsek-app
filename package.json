@@ -7,6 +7,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "build:ios": "expo build:ios",
     "eject": "expo eject",
     "test": "jest --watchAll",
     "dev": "concurrently \"graphql-codegen --config codegen.yml --watch\" \"expo start\"",
