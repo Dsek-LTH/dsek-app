@@ -5,7 +5,7 @@ import { TextInput } from 'react-native-paper';
 import DropDown from 'react-native-paper-dropdown';
 import MarkdownEditor from '~/components/markdown/MarkdownEditor';
 import { ScrollView, View } from '~/components/Themed';
-import { useGetPresignedPutUrlMutation } from '~/generated/graphql';
+import { useGetUploadDataMutation, usePresignedPutUrlQuery } from '~/generated/graphql';
 
 type EditorProps = {
   header: string;
@@ -33,8 +33,9 @@ export default function ArticleEditorItem({
   const [fileName, setFileName] = useState('');
   const [showDropDown, setShowDropDown] = useState(false);
 
-  const [getPresignedPutUrlMutation] = useGetPresignedPutUrlMutation({
+  const [getUploadData] = useGetUploadDataMutation({
     variables: {
+      header,
       fileName,
     },
   });

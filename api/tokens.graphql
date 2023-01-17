@@ -1,0 +1,8 @@
+mutation UploadToken($token: String!) {
+  token {
+    register(expo_token: $token) {
+      expo_token
+      id
+    }
+  }
+}

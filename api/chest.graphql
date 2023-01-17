@@ -1,0 +1,43 @@
+query MyChest($studentId: String!) {
+  chest(studentId: $studentId) {
+    id
+    items {
+      id
+      name
+      description
+      paidPrice
+      imageUrl
+      variant
+      category {
+        id
+        name
+        description
+      }
+      paidAt
+      consumedAt
+    }
+  }
+}
+
+mutation ConsumeItem($itemId: UUID!) {
+  webshop {
+    consumeItem(itemId: $itemId) {
+      id
+      items {
+        id
+        name
+        description
+        paidPrice
+        imageUrl
+        variant
+        category {
+          id
+          name
+          description
+        }
+        paidAt
+        consumedAt
+      }
+    }
+  }
+}

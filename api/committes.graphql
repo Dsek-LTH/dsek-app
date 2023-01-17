@@ -1,0 +1,9 @@
+query GetCommittees {
+  committees(perPage: 50) {
+    committees {
+      id
+      name
+      shortName
+    }
+  }
+}
