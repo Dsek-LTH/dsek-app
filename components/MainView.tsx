@@ -1,37 +1,57 @@
-import React from 'react'
-import { SafeAreaView } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { BackHandler, Platform, SafeAreaView } from 'react-native';
 import WebView from 'react-native-webview';
+import NotificationProvider from '~/providers/NotificationProvider';
 
+const WEBSITE_URL = 'http://192.168.1.167:3000';
 
 const setupCode = `
 window.isNativeApp = true;
+
 true; // note: this is required, or you'll sometimes get silent failures
 `;
 
 const initialCode = `
-    setTimeout(function() { 
-        window.alert("Click me!");
-      }, 1000);
-    true; // note: this is required, or you'll sometimes get silent failures
-  `;
+const loadEvent = new CustomEvent('appLoad', {detail: {isNativeApp: true}});
+window.dispatchEvent(loadEvent);
+
+true; // note: this is required, or you'll sometimes get silent failures
+`;
 
 const MainView: React.FC = () => {
-  
+  const webViewRef = useRef<typeof WebView>(null);
+  const onAndroidBackPress = () => {
+    if (webViewRef.current) {
+      webViewRef.current.goBack();
+      return true; // prevent default behavior (exit app)
+    }
+    return false;
+  };
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      BackHandler.addEventListener('hardwareBackPress', onAndroidBackPress);
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', onAndroidBackPress);
+      };
+    }
+  }, []);
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#121212'}}>
-    {/* <TabNavigator /> */}
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#121212' }}>
+      <NotificationProvider webref={webViewRef} />
       <WebView
         style={{}}
-        source={{ uri: 'https://member.dsek.se' }} 
+        source={{ uri: WEBSITE_URL }}
+        // allowsBackForwardNavigationGestures /* for swipe navigation on iOS */
+        ref={webViewRef} /* for swipe navigation (and back buttn) on Android */
         onMessage={(event) => {
           console.log(event);
-          console.log(event.nativeEvent.data);
         }}
         injectedJavaScript={initialCode}
         injectedJavaScriptBeforeContentLoaded={setupCode}
-        />
+      />
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default MainView
+export default MainView;

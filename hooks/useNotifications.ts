@@ -41,25 +41,9 @@ const registerForPushNotificationsAsync = async () => {
 
 const useNotifications = () => {
   const [expoPushToken, setExpoPushToken] = useState('');
-  // const [notification, setNotification] = useState<Notifications.Notification | false>(false);
-  // const notificationListener = useRef<any>();
-  // const responseListener = useRef<any>();
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
-    /* 
-        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-          setNotification(notification);
-        });
-    
-        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-          console.log(response);
-        });
-    
-        return () => {
-          Notifications.removeNotificationSubscription(notificationListener.current);
-          Notifications.removeNotificationSubscription(responseListener.current);
-        }; */
   }, []);
 
   return expoPushToken;
