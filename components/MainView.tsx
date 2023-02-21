@@ -3,7 +3,7 @@ import { BackHandler, Platform, SafeAreaView, Linking } from 'react-native';
 import WebView from 'react-native-webview';
 import NotificationProvider from '~/providers/NotificationProvider';
 
-const WEBSITE_URL = 'http://81.226.224.120:3000/en';
+const WEBSITE_URL = 'https://dsek.se';
 
 const setupCode = `
 window.isNativeApp = true;
@@ -49,7 +49,8 @@ const MainView: React.FC = () => {
         injectedJavaScriptBeforeContentLoaded={setupCode}
         onNavigationStateChange={(newNavState) => {
           if (
-            !newNavState.url.includes(WEBSITE_URL) &&
+            !newNavState.url.includes(WEBSITE_URL) && 
+            !newNavState.url.includes('https://www.dsek.se') &&
             !newNavState.url.includes('portal.dsek.se')
           ) {
             webViewRef.current.stopLoading();

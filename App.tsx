@@ -13,15 +13,9 @@ const App = () => {
     return null;
   } else {
     return (
-      <LoginProvider>
-        <UserProvider>
-          <ApiAccessProvider>
-            <SafeAreaProvider>
-              <MainView />
-            </SafeAreaProvider>
-          </ApiAccessProvider>
-        </UserProvider>
-      </LoginProvider>
+      <SafeAreaProvider>
+        <MainView />
+      </SafeAreaProvider>
     );
   }
 };

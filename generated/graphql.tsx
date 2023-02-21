@@ -450,6 +450,17 @@ export type CreatePosition = {
   name: Scalars['String'];
 };
 
+export type CreateSpecialReceiver = {
+  alias: Scalars['String'];
+  targetEmail: Scalars['String'];
+};
+
+export type CreateSpecialSender = {
+  alias: Scalars['String'];
+  keycloakId: Scalars['String'];
+  studentId: Scalars['String'];
+};
+
 export type CreateTag = {
   color?: InputMaybe<Scalars['String']>;
   icon?: InputMaybe<Scalars['String']>;
@@ -493,8 +504,8 @@ export type DoorMutationsRemoveArgs = {
 export type EmailUser = {
   __typename?: 'EmailUser';
   email?: Maybe<Scalars['String']>;
-  keycloakId: Scalars['String'];
-  studentId: Scalars['String'];
+  keycloakId?: Maybe<Scalars['String']>;
+  studentId?: Maybe<Scalars['String']>;
 };
 
 export type Event = {
@@ -668,6 +679,7 @@ export type MailAliasMutations = {
   __typename?: 'MailAliasMutations';
   create?: Maybe<MailAlias>;
   remove?: Maybe<MailAlias>;
+  updateSenderStatus?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -680,10 +692,21 @@ export type MailAliasMutationsRemoveArgs = {
   id: Scalars['UUID'];
 };
 
+
+export type MailAliasMutationsUpdateSenderStatusArgs = {
+  input: Array<MailAliasStatus>;
+};
+
 export type MailAliasPolicy = {
   __typename?: 'MailAliasPolicy';
+  canSend: Scalars['Boolean'];
   id: Scalars['UUID'];
   position: Position;
+};
+
+export type MailAliasStatus = {
+  canSend: Scalars['Boolean'];
+  id: Scalars['UUID'];
 };
 
 export type MailRecipient = {
@@ -844,6 +867,8 @@ export type Mutation = {
   markdown?: Maybe<MarkdownMutations>;
   member?: Maybe<MemberMutations>;
   position?: Maybe<PositionMutations>;
+  specialReceiver?: Maybe<SpecialReceiverMutations>;
+  specialSender?: Maybe<SpecialSenderMutations>;
   tags?: Maybe<TagMutations>;
   token?: Maybe<TokenMutations>;
   webshop?: Maybe<WebshopMutations>;
@@ -1036,6 +1061,7 @@ export type Query = {
   alerts: Array<Alert>;
   alias?: Maybe<MailAlias>;
   aliases?: Maybe<Array<Maybe<MailAlias>>>;
+  allEmails: Array<Scalars['String']>;
   api?: Maybe<Api>;
   /** returns all apis the signed in member has access to. */
   apiAccess?: Maybe<Array<Api>>;
@@ -1068,9 +1094,12 @@ export type Query = {
   productCategories: Array<Maybe<ProductCategory>>;
   products: Array<Maybe<Product>>;
   resolveRecipients: Array<Maybe<MailRecipient>>;
+  resolveSenders: Array<Maybe<MailRecipient>>;
   songById?: Maybe<Song>;
   songByTitle?: Maybe<Song>;
   songs?: Maybe<Array<Maybe<Song>>>;
+  specialReceivers: Array<Maybe<SpecialReceiver>>;
+  specialSenders: Array<Maybe<SpecialSender>>;
   tag?: Maybe<Tag>;
   tags: Array<Tag>;
   token?: Maybe<Token>;
@@ -1225,6 +1254,16 @@ export type QuerySongByTitleArgs = {
 };
 
 
+export type QuerySpecialReceiversArgs = {
+  alias: Scalars['String'];
+};
+
+
+export type QuerySpecialSendersArgs = {
+  alias: Scalars['String'];
+};
+
+
 export type QueryTagArgs = {
   id: Scalars['UUID'];
 };
@@ -1243,6 +1282,51 @@ export type Song = {
   melody: Scalars['String'];
   title: Scalars['String'];
   updated_at?: Maybe<Scalars['Date']>;
+};
+
+export type SpecialReceiver = {
+  __typename?: 'SpecialReceiver';
+  id: Scalars['UUID'];
+  targetEmail: Scalars['String'];
+};
+
+export type SpecialReceiverMutations = {
+  __typename?: 'SpecialReceiverMutations';
+  create?: Maybe<SpecialReceiver>;
+  remove?: Maybe<SpecialReceiver>;
+};
+
+
+export type SpecialReceiverMutationsCreateArgs = {
+  input: CreateSpecialReceiver;
+};
+
+
+export type SpecialReceiverMutationsRemoveArgs = {
+  id: Scalars['UUID'];
+};
+
+export type SpecialSender = {
+  __typename?: 'SpecialSender';
+  id: Scalars['UUID'];
+  keycloakId: Scalars['String'];
+  studentId: Scalars['String'];
+};
+
+export type SpecialSenderMutations = {
+  __typename?: 'SpecialSenderMutations';
+  create?: Maybe<SpecialSender>;
+  remove?: Maybe<SpecialSender>;
+};
+
+
+export type SpecialSenderMutationsCreateArgs = {
+  input: CreateSpecialSender;
+};
+
+
+export type SpecialSenderMutationsRemoveArgs = {
+  id: Scalars['UUID'];
 };
 
 export type Tag = {
@@ -1896,7 +1980,7 @@ export type ResolveRecipientsEmailQuery = { __typename?: 'Query', resolveRecipie
 export type ResolveRecipientsStudentIdQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ResolveRecipientsStudentIdQuery = { __typename?: 'Query', resolveRecipients: Array<{ __typename?: 'MailRecipient', alias: string, emailUsers: Array<{ __typename?: 'EmailUser', studentId: string }> } | null> };
+export type ResolveRecipientsStudentIdQuery = { __typename?: 'Query', resolveRecipients: Array<{ __typename?: 'MailRecipient', alias: string, emailUsers: Array<{ __typename?: 'EmailUser', studentId?: string | null }> } | null> };
 
 export type GetMandatesByPeriodQueryVariables = Exact<{
   page: Scalars['Int'];
