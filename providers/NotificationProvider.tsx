@@ -5,6 +5,7 @@ import WebView from 'react-native-webview';
 
 const NotificationProvider: React.FC<{ webref: Ref<typeof WebView> }> = ({ webref }) => {
   const token = useNotifications();
+  console.log(token)
 
   // Listen for if user taps on notification and open related page if they do
   const lastNotificationResponse = Notifications.useLastNotificationResponse();
@@ -13,13 +14,13 @@ const NotificationProvider: React.FC<{ webref: Ref<typeof WebView> }> = ({ webre
       lastNotificationResponse &&
       lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
     ) {
-      const { id } = lastNotificationResponse.notification.request.content.data as {
-        id: string | undefined;
-      };
-      if (!id) return;
-      // TODO: Go to page
+      const link: string = lastNotificationResponse.notification.request.content.data.link;
+      if (!link) return;
+      webref.current.injectJavaScript(`
+        window.location.pathname = '${link}';
+      `);
     }
-  }, [lastNotificationResponse]);
+  }, [lastNotificationResponse, webref.current]);
 
   useEffect(() => {
     if (token && webref.current) {
@@ -35,6 +36,10 @@ const NotificationProvider: React.FC<{ webref: Ref<typeof WebView> }> = ({ webre
       `);
     }
   }, [token, webref]);
+
+  
+
+
   return null;
 };
 

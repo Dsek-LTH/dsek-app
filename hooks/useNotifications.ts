@@ -59,6 +59,7 @@ const registerForPushNotificationsAsync = async () => {
       description: 'Notifications that are REALLY important, should be very rare',
       importance: Notifications.AndroidImportance.MAX,
     });
+  }
   if (Device.isDevice) {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
@@ -74,7 +75,6 @@ const registerForPushNotificationsAsync = async () => {
     alert('Must use physical device for Push Notifications');
   }
     
-  }
   return token;
 };
 
