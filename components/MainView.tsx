@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { BackHandler, Platform, SafeAreaView, Linking } from 'react-native';
+import { BackHandler, Platform, SafeAreaView, Linking, View } from 'react-native';
 import WebView from 'react-native-webview';
 import NotificationProvider from '~/providers/NotificationProvider';
 
@@ -42,7 +42,6 @@ const MainView: React.FC = () => {
       <NotificationProvider webref={webViewRef} />
       <WebView
         source={{ uri: WEBSITE_URL }}
-        // allowsBackForwardNavigationGestures /* for swipe navigation on iOS */
         ref={webViewRef}
         sharedCookiesEnabled
         injectedJavaScript={initialCode}
@@ -57,6 +56,7 @@ const MainView: React.FC = () => {
             Linking.openURL(newNavState.url);
           }
         }}
+        renderLoading={() => <View style={{ flex: 1, backgroundColor: '#ff0', width: '100%', height: '100%', }} />}
       />
     </SafeAreaView>
   );

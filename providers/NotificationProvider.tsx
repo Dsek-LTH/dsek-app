@@ -5,7 +5,6 @@ import WebView from 'react-native-webview';
 
 const NotificationProvider: React.FC<{ webref: Ref<typeof WebView> }> = ({ webref }) => {
   const token = useNotifications();
-  console.log(token)
 
   // Listen for if user taps on notification and open related page if they do
   const lastNotificationResponse = Notifications.useLastNotificationResponse();
