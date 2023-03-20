@@ -1,37 +1,45 @@
-import React from 'react';
+import React, { Ref, useEffect } from 'react';
 import * as Notifications from 'expo-notifications';
-import { useUploadTokenMutation } from '~/generated/graphql';
 import useNotifications from '~/hooks/useNotifications';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { NewsStackParamList } from '~/types/navigation';
+import WebView from 'react-native-webview';
 
-const NotificationProvider: React.FC = ({ children }) => {
+const NotificationProvider: React.FC<{ webref: Ref<typeof WebView> }> = ({ webref }) => {
   const token = useNotifications();
-  const navigation = useNavigation<NavigationProp<NewsStackParamList>>();
 
-  // Listen for if user taps on notification and open related article if they do
+  // Listen for if user taps on notification and open related page if they do
   const lastNotificationResponse = Notifications.useLastNotificationResponse();
-  React.useEffect(() => {
+  useEffect(() => {
     if (
       lastNotificationResponse &&
       lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
     ) {
-      const { id } = lastNotificationResponse.notification.request.content.data as {
-        id: string | undefined;
-      };
-      if (!id) return;
-      navigation.navigate('Article', { id });
+      const link: string = lastNotificationResponse.notification.request.content.data.link;
+      if (!link) return;
+      webref.current.injectJavaScript(`
+        window.location.pathname = '${link}';
+      `);
     }
-  }, [lastNotificationResponse]);
+  }, [lastNotificationResponse, webref.current]);
 
-  const [uploadTokenMutation, { error }] = useUploadTokenMutation();
+  useEffect(() => {
+    if (token && webref.current) {
+      webref.current.injectJavaScript(`
+        // Use window object if notification token has been loaded before page loads
+        window.notificationToken = '${token}';
 
-  React.useEffect(() => {
-    if (token) {
-      uploadTokenMutation({ variables: { token } });
+        // Use events if notification token loads, or updates, AFTER page initially loads
+        const notificationEvent = new CustomEvent('appSendNotificationToken', {detail: {token: '${token}'}});
+        window.dispatchEvent(notificationEvent);
+
+        true; // note: this is required, or you'll sometimes get silent failures
+      `);
     }
-  }, [token, uploadTokenMutation]);
-  return <React.Fragment>{children}</React.Fragment>;
+  }, [token, webref]);
+
+  
+
+
+  return null;
 };
 
 export default NotificationProvider;
