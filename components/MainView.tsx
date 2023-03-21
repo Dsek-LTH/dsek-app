@@ -43,6 +43,7 @@ const MainView: React.FC = () => {
       <WebView
         source={{ uri: WEBSITE_URL }}
         ref={webViewRef}
+        allowsBackForwardNavigationGestures /* for swipe navigation on iOS */
         sharedCookiesEnabled
         injectedJavaScript={initialCode}
         injectedJavaScriptBeforeContentLoaded={setupCode}
