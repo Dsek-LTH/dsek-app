@@ -8,7 +8,6 @@ export default function useCachedResources() {
 
   // Load any resources or data that we need prior to rendering the app
   useLayoutEffect(() => {
-    SplashScreen.preventAutoHideAsync();
     async function loadResourcesAndDataAsync() {
       try {
 
@@ -22,7 +21,6 @@ export default function useCachedResources() {
         console.warn(e);
       } finally {
         setLoadingComplete(true);
-        SplashScreen.hideAsync();
       }
     }
 

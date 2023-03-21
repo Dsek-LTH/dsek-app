@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { BackHandler, Platform, SafeAreaView, Linking, View } from 'react-native';
 import WebView from 'react-native-webview';
 import NotificationProvider from '~/providers/NotificationProvider';
+import * as SplashScreen from 'expo-splash-screen';
 
 const WEBSITE_URL = 'https://dsek.se';
 
@@ -38,11 +39,14 @@ const MainView: React.FC = () => {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#121212' }}>
+    <View style={{ flex: 1, backgroundColor: '#121212' }}>
       <NotificationProvider webref={webViewRef} />
       <WebView
         source={{ uri: WEBSITE_URL }}
         ref={webViewRef}
+        onLoadEnd={() => {
+          SplashScreen.hideAsync();
+        }}
         allowsBackForwardNavigationGestures /* for swipe navigation on iOS */
         sharedCookiesEnabled
         injectedJavaScript={initialCode}
@@ -57,9 +61,9 @@ const MainView: React.FC = () => {
             Linking.openURL(newNavState.url);
           }
         }}
-        renderLoading={() => <View style={{ flex: 1, backgroundColor: '#ff0', width: '100%', height: '100%', }} />}
+        renderLoading={() => <View style={{ flex: 1, backgroundColor: '#121212', width: '100%', height: '100%', }} />}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
