@@ -54,10 +54,10 @@ const registerForPushNotificationsAsync = async () => {
       description: 'When you get a new volunteer position (funktionärspost)',
       importance: Notifications.AndroidImportance.DEFAULT,
     });
-    Notifications.setNotificationChannelAsync('IMPORTANT', {
-      name: 'Important notifications',
-      description: 'Notifications that are REALLY important, should be very rare',
-      importance: Notifications.AndroidImportance.MAX,
+    Notifications.setNotificationChannelAsync('BOOKING_REQUEST', {
+      name: 'Bookings',
+      description: 'Information relevant to your booking requests',
+      importance: Notifications.AndroidImportance.HIGH,
     });
   }
   if (Device.isDevice) {
