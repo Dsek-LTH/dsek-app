@@ -76,6 +76,7 @@ const MainView: React.FC = () => {
           );
         }}
         pullToRefreshEnabled
+        decelerationRate="normal"
         style={{ flex: isLoading ? 0 : 1, backgroundColor: 'transparent' }}
         allowsBackForwardNavigationGestures /* for swipe navigation on iOS */
         sharedCookiesEnabled
