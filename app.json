@@ -20,7 +20,7 @@
     ],
     "ios": {
       "bundleIdentifier": "se.dsek.member",
-      "buildNumber": "1.1.2",
+      "buildNumber": "1.1.3",
       "supportsTablet": false
     },
     "android": {
