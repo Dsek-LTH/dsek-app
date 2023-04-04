@@ -26,9 +26,10 @@
     "android": {
       "package": "se.dsek",
       "versionCode": 114,
+      "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#f280a1"
       },
       "googleServicesFile": "./google-services.json"
     },
