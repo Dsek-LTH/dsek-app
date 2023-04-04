@@ -4,7 +4,7 @@ import WebView from 'react-native-webview';
 import NotificationProvider from '~/providers/NotificationProvider';
 import * as SplashScreen from 'expo-splash-screen';
 
-const WEBSITE_URL = 'https://app.sandbox.dsek.se';
+const WEBSITE_URL = 'https://app.dsek.se';
 
 const MainView: React.FC = () => {
   const webViewRef = useRef<WebView>(null);
@@ -81,13 +81,14 @@ const MainView: React.FC = () => {
         sharedCookiesEnabled
         onNavigationStateChange={(newNavState) => {
           if (
-            !newNavState.url.includes(WEBSITE_URL) && 
-            !newNavState.url.includes('https://www.dsek.se') &&
+            !newNavState.url.startsWith(WEBSITE_URL) && 
+            !newNavState.url.startsWith('https://dsek.se') &&
+            !newNavState.url.startsWith('https://www.dsek.se') &&
             !newNavState.url.includes('portal.dsek.se')
           ) {
             webViewRef.current.stopLoading();
             Linking.openURL(newNavState.url);
-          } else if (newNavState.url.startsWith('https://dsek.se')) {
+          } else if (newNavState.url.startsWith('https://dsek.se') || newNavState.url.startsWith('https://www.dsek.se')) {
             webViewRef.current.stopLoading();
             webViewRef.current.injectJavaScript(`
               window.location = '${newNavState.url.replace('https://dsek.se', 'https://app.dsek.se')}';
