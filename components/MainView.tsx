@@ -36,7 +36,7 @@ const MainView: React.FC = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#121212', position: 'relative' }}>
-      <NotificationProvider webref={webViewRef} />
+      <NotificationProvider webref={webViewRef} isLoading={isLoading} />
       {isLoading && (
         <View style={{
             flex: 5,

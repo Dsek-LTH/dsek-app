@@ -3,7 +3,10 @@ import * as Notifications from 'expo-notifications';
 import useNotifications from '~/hooks/useNotifications';
 import WebView from 'react-native-webview';
 
-const NotificationProvider: React.FC<{ webref: React.MutableRefObject<WebView<{}>>}> = ({ webref }) => {
+const NotificationProvider: React.FC<{ 
+    webref: React.MutableRefObject<WebView<{}>>,
+    isLoading: boolean
+  }> = ({ webref, isLoading }) => {
   const token = useNotifications();
 
   // Listen for if user taps on notification and open related page if they do
@@ -22,7 +25,7 @@ const NotificationProvider: React.FC<{ webref: React.MutableRefObject<WebView<{}
   }, [lastNotificationResponse, webref.current]);
 
   useEffect(() => {
-    if (token && webref.current) {
+    if (token && webref.current && !isLoading) {
       webref.current.injectJavaScript(`
         // Use window object if notification token has been loaded before page loads
         window.notificationToken = '${token}';
@@ -33,7 +36,7 @@ const NotificationProvider: React.FC<{ webref: React.MutableRefObject<WebView<{}
         true; // note: this is required, or you'll sometimes get silent failures
       `);
     }
-  }, [token, webref]);
+  }, [token, webref, isLoading]);
 
   
 
