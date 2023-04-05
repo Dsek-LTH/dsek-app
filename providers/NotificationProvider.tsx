@@ -1,12 +1,13 @@
-import React, { Ref, useEffect } from 'react';
 import * as Notifications from 'expo-notifications';
-import useNotifications from '~/hooks/useNotifications';
+import React, { useEffect } from 'react';
 import WebView from 'react-native-webview';
 
-const NotificationProvider: React.FC<{ 
-    webref: React.MutableRefObject<WebView<{}>>,
-    isLoading: boolean
-  }> = ({ webref, isLoading }) => {
+import useNotifications from '~/hooks/useNotifications';
+
+const NotificationProvider: React.FC<{
+  webref: React.MutableRefObject<WebView<object>>;
+  isLoading: boolean;
+}> = ({ webref, isLoading }) => {
   const token = useNotifications();
 
   // Listen for if user taps on notification and open related page if they do
@@ -16,7 +17,9 @@ const NotificationProvider: React.FC<{
       lastNotificationResponse &&
       lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
     ) {
-      const link = lastNotificationResponse.notification.request.content.data.link as string | undefined;
+      const link = lastNotificationResponse.notification.request.content.data.link as
+        | string
+        | undefined;
       if (!link) return;
       webref.current.injectJavaScript(`
         window.location.pathname = '${link}';
@@ -37,9 +40,6 @@ const NotificationProvider: React.FC<{
       `);
     }
   }, [token, webref, isLoading]);
-
-  
-
 
   return null;
 };

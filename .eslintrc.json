@@ -5,7 +5,7 @@
     "node": true,
     "mocha": true
   },
-  "extends": ["universe/s"],
+  "extends": ["universe/native"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -36,6 +36,7 @@
       }
     ],
     "func-names": ["error", "as-needed"],
+ 
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -46,11 +47,6 @@
         "tsx": "never"
       }
     ],
-    "react/function-component-definition": [
-      "error",
-      { "namedComponents": "function-declaration" }
-    ],
-    "@next/next/no-html-link-for-pages": ["error", "frontend/pages/"],
 
     "camelcase": "off",
     "implicit-arrow-linebreak": "off",
@@ -60,7 +56,6 @@
     "no-underscore-dangle": "off",
 
     "no-unused-expressions": "off",
-    "chai-friendly/no-unused-expressions": "error",
 
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": ["error"],

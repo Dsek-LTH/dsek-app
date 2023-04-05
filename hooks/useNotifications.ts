@@ -1,7 +1,7 @@
-import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
-import { useEffect, useRef, useState } from 'react';
-import { Platform, PlatformColor } from 'react-native';
+import * as Notifications from 'expo-notifications';
+import { useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -40,17 +40,17 @@ const registerForPushNotificationsAsync = async () => {
       importance: Notifications.AndroidImportance.DEFAULT,
     });
     Notifications.setNotificationChannelAsync('EVENT_GOING', {
-      name: "Going to your event",
+      name: 'Going to your event',
       description: 'When someone wants to go to your event',
       importance: Notifications.AndroidImportance.DEFAULT,
     });
     Notifications.setNotificationChannelAsync('EVENT_INTERESTED', {
-      name: "Interested in your event",
+      name: 'Interested in your event',
       description: 'When someone is interested in your event',
       importance: Notifications.AndroidImportance.DEFAULT,
     });
     Notifications.setNotificationChannelAsync('CREATE_MANDATE', {
-      name: "New position",
+      name: 'New position',
       description: 'When you get a new volunteer position (funktionärspost)',
       importance: Notifications.AndroidImportance.MAX,
     });
@@ -74,7 +74,7 @@ const registerForPushNotificationsAsync = async () => {
   } else {
     alert('Must use physical device for Push Notifications');
   }
-    
+
   return token;
 };
 
