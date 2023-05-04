@@ -11,7 +11,7 @@
     "eject": "expo eject",
     "dev": "expo start --tunnel",
     "deploy:android": "eas build --platform android",
-    "deploy:ios": "eas build --platform android"
+    "deploy:ios": "eas build --platform ios"
   },
   "jest": {
     "preset": "jest-expo"

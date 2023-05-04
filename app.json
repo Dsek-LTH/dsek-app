@@ -20,7 +20,7 @@
     ],
     "ios": {
       "bundleIdentifier": "se.dsek.member",
-      "buildNumber": "1.1.4",
+      "buildNumber": "1.1.5",
       "supportsTablet": false,
       "infoPlist": {
         "NSCameraUsageDescription": "This app requires access to the camera to take photos.",
@@ -34,7 +34,7 @@
     },
     "android": {
       "package": "se.dsek",
-      "versionCode": 115,
+      "versionCode": 116,
       "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
