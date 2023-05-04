@@ -15,7 +15,7 @@ import WebView from 'react-native-webview';
 
 import NotificationProvider from '~/providers/NotificationProvider';
 
-const WEBSITE_URL = 'https://dsek.se';
+const WEBSITE_URL = 'https://app.dsek.se';
 
 const DARK_COLOR = '#121212';
 const LIGHT_COLOR = '#fff';
@@ -50,8 +50,15 @@ const MainView: React.FC<{
   onColorChange: (mode: 'dark' | 'light') => void;
 }> = ({ colorScheme, onColorChange }) => {
   const webViewRef = useRef<WebView>(null);
+  const [initialLoad, setInitialLoad] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(true);
   const backgroundColor = colorScheme === 'light' ? LIGHT_COLOR : DARK_COLOR;
+
+  useEffect(() => {
+    if (isLoading === false && initialLoad === true) {
+      setInitialLoad(false);
+    }
+  }, [isLoading, initialLoad]);
 
   /* for swipe navigation (and back button) on Android */
   const onAndroidBackPress = () => {
@@ -80,7 +87,7 @@ const MainView: React.FC<{
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor, position: 'relative' }}>
       <NotificationProvider webref={webViewRef} isLoading={isLoading} />
-      {isLoading && (
+      {initialLoad && (
         <View
           style={{
             flex: 5,
@@ -99,7 +106,13 @@ const MainView: React.FC<{
         }}
         contentContainerStyle={{ flex: 1 }}
         refreshControl={
-          <RefreshControl refreshing={false} onRefresh={webViewRef?.current?.reload} />
+          <RefreshControl
+            refreshing={false}
+            onRefresh={() => {
+              setIsLoading(true);
+              webViewRef?.current?.reload();
+            }}
+          />
         }>
         <WebView
           source={{ uri: WEBSITE_URL }}
@@ -161,11 +174,12 @@ const MainView: React.FC<{
               </View>
             );
           }}
-          pullToRefreshEnabled
+          nestedScrollEnabled
           setBuiltInZoomControls={false}
           textZoom={0}
           decelerationRate="normal"
           style={{ flex: isLoading ? 0 : 1, backgroundColor: 'transparent' }}
+          renderLoading={() => null}
           allowsBackForwardNavigationGestures /* for swipe navigation on iOS */
           sharedCookiesEnabled
           onNavigationStateChange={(newNavState) => {
