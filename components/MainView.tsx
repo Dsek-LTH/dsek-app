@@ -25,7 +25,10 @@ const INTIIAL_JAVASCRIPT_CODE = `
   const mode = window.localStorage.getItem('mode');
   const updateMode = (newMode) => {
     if (newMode) {
-      window.ReactNativeWebView.postMessage(newMode);
+      window.ReactNativeWebView.postMessage(JSON.stringify({
+        type: 'mode',
+        value: newMode
+      }));
     }
   }
   updateMode(mode);
@@ -41,7 +44,23 @@ const INTIIAL_JAVASCRIPT_CODE = `
     return result;
   };
   object[method] = newMethod.bind(object);
-})();
+
+  ${
+    Platform.OS === 'ios'
+      ? ''
+      : `
+  setTimeout(() => {
+    window.addEventListener('scroll', function (event) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({
+          type: 'scroll',
+          value: window.scrollY,
+        })
+      );
+    }, true);
+  }, 300);
+})();`
+  }
 
 true;`;
 
@@ -55,6 +74,7 @@ const MainView: React.FC<{
   const webViewRef = useRef<WebView>(null);
   const [initialLoad, setInitialLoad] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [ptrEnabled, setPTREnabled] = React.useState(true);
   const backgroundColor = colorScheme === 'light' ? LIGHT_COLOR : DARK_COLOR;
 
   const url = Linking.useURL();
@@ -115,7 +135,7 @@ const MainView: React.FC<{
           backgroundColor: 'transparent',
           position: 'relative',
         }}
-        contentContainerStyle={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1 }}
         refreshControl={
           <RefreshControl
             refreshing={false}
@@ -123,6 +143,7 @@ const MainView: React.FC<{
               setIsLoading(true);
               webViewRef?.current?.reload();
             }}
+            enabled={Platform.OS === 'ios' ? true : ptrEnabled}
           />
         }>
         <WebView
@@ -131,9 +152,23 @@ const MainView: React.FC<{
           forceDarkOn={colorScheme !== 'light'}
           injectedJavaScript={INTIIAL_JAVASCRIPT_CODE}
           onMessage={(event) => {
-            const msg = event.nativeEvent.data;
-            if (msg === 'light' || msg === 'dark') {
-              onColorChange(msg);
+            let msg;
+            try {
+              msg = JSON.parse(event.nativeEvent.data);
+            } catch (e) {
+              return;
+            }
+            const value = msg.value;
+            if (msg.type === 'scroll') {
+              if (value === 0 && !ptrEnabled) {
+                setPTREnabled(true);
+              } else if (value > 10 && ptrEnabled) {
+                setPTREnabled(false);
+              }
+            } else {
+              if (value === 'light' || value === 'dark') {
+                onColorChange(value);
+              }
             }
           }}
           onLoadEnd={() => {
@@ -189,7 +224,11 @@ const MainView: React.FC<{
           setBuiltInZoomControls={false}
           textZoom={100}
           decelerationRate="normal"
-          style={{ flex: isLoading ? 0 : 1, backgroundColor: 'transparent' }}
+          style={{
+            flex: isLoading ? 0 : 1,
+            backgroundColor: 'transparent',
+            position: 'relative',
+          }}
           renderLoading={() => null}
           allowsBackForwardNavigationGestures /* for swipe navigation on iOS */
           sharedCookiesEnabled
