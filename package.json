@@ -9,7 +9,9 @@
     "web": "expo start --web",
     "build:ios": "expo build:ios",
     "eject": "expo eject",
-    "dev": "expo start --tunnel"
+    "dev": "expo start --tunnel",
+    "deploy:android": "eas build --platform android",
+    "deploy:ios": "eas build --platform android"
   },
   "jest": {
     "preset": "jest-expo"

@@ -27,11 +27,14 @@
         "NSPhotoLibraryAddUsageDescription": "This app requires access to the photo library to save photos.",
         "NSPhotoLibraryUsageDescription": "This app requires access to the photo library to select photos."
       },
-      "associatedDomains": ["applinks:dsek.se","applinks:www.dsek.se"]
+      "associatedDomains": [
+        "applinks:dsek.se",
+        "applinks:www.dsek.se"
+      ]
     },
     "android": {
       "package": "se.dsek",
-      "versionCode": 114,
+      "versionCode": 115,
       "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
@@ -47,7 +50,10 @@
               "host": "*.dsek.se"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
