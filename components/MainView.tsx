@@ -1,9 +1,9 @@
+import * as Linking from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useRef } from 'react';
 import {
   ActivityIndicator,
   BackHandler,
-  Linking,
   Platform,
   RefreshControl,
   SafeAreaView,
@@ -45,6 +45,9 @@ const INTIIAL_JAVASCRIPT_CODE = `
 
 true;`;
 
+const fixUrl = (url: string | undefined) =>
+  url?.replace('https://dsek.se', WEBSITE_URL)?.replace('https://www.dsek.se', WEBSITE_URL);
+
 const MainView: React.FC<{
   colorScheme: 'light' | 'dark';
   onColorChange: (mode: 'dark' | 'light') => void;
@@ -53,6 +56,14 @@ const MainView: React.FC<{
   const [initialLoad, setInitialLoad] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(true);
   const backgroundColor = colorScheme === 'light' ? LIGHT_COLOR : DARK_COLOR;
+
+  const url = Linking.useURL();
+  const startUrl =
+    !url || (process.env.NODE_ENV === 'development' && url.startsWith('exp://'))
+      ? WEBSITE_URL
+      : url?.startsWith('dsek://') // If they use scheme
+      ? `${WEBSITE_URL}/${url.substring(7)}`
+      : fixUrl(url);
 
   useEffect(() => {
     if (isLoading === false && initialLoad === true) {
@@ -115,7 +126,7 @@ const MainView: React.FC<{
           />
         }>
         <WebView
-          source={{ uri: WEBSITE_URL }}
+          source={{ uri: startUrl }}
           ref={webViewRef}
           forceDarkOn={colorScheme !== 'light'}
           injectedJavaScript={INTIIAL_JAVASCRIPT_CODE}
@@ -197,9 +208,7 @@ const MainView: React.FC<{
             ) {
               webViewRef.current.stopLoading();
               webViewRef.current.injectJavaScript(`
-                window.location = '${newNavState.url
-                  .replace('https://dsek.se', 'https://app.dsek.se')
-                  .replace('https://www.dsek.se', 'https://app.dsek.se')}';
+                window.location = '${fixUrl(newNavState.url)}';
               `);
             }
           }}

@@ -26,7 +26,8 @@
         "NSCameraUsageDescription": "This app requires access to the camera to take photos.",
         "NSPhotoLibraryAddUsageDescription": "This app requires access to the photo library to save photos.",
         "NSPhotoLibraryUsageDescription": "This app requires access to the photo library to select photos."
-      }
+      },
+      "associatedDomains": ["applinks:dsek.se","applinks:www.dsek.se"]
     },
     "android": {
       "package": "se.dsek",
@@ -36,7 +37,19 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#f280a1"
       },
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "https",
+              "host": "*.dsek.se"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
