@@ -187,7 +187,7 @@ const MainView: React.FC<{
           }}
           nestedScrollEnabled
           setBuiltInZoomControls={false}
-          textZoom={0}
+          textZoom={100}
           decelerationRate="normal"
           style={{ flex: isLoading ? 0 : 1, backgroundColor: 'transparent' }}
           renderLoading={() => null}
