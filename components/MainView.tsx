@@ -44,11 +44,12 @@ const INTIIAL_JAVASCRIPT_CODE = `
     return result;
   };
   object[method] = newMethod.bind(object);
+})();
 
-  ${
-    Platform.OS === 'ios'
-      ? ''
-      : `
+${
+  Platform.OS === 'ios'
+    ? ''
+    : `
   setTimeout(() => {
     window.addEventListener('scroll', function (event) {
       window.ReactNativeWebView.postMessage(
@@ -58,9 +59,8 @@ const INTIIAL_JAVASCRIPT_CODE = `
         })
       );
     }, true);
-  }, 300);
-})();`
-  }
+  }, 300);`
+}
 
 true;`;
 
@@ -115,6 +115,114 @@ const MainView: React.FC<{
     return () => clearInterval(interval);
   }, []);
 
+  const WEBVIEW = (
+    <WebView
+      source={{ uri: startUrl }}
+      ref={webViewRef}
+      forceDarkOn={colorScheme !== 'light'}
+      injectedJavaScript={INTIIAL_JAVASCRIPT_CODE}
+      onMessage={(event) => {
+        let msg;
+        try {
+          msg = JSON.parse(event.nativeEvent.data);
+        } catch (e) {
+          return;
+        }
+        const value = msg.value;
+        if (msg.type === 'scroll') {
+          if (value === 0 && !ptrEnabled) {
+            setPTREnabled(true);
+          } else if (value > 10 && ptrEnabled) {
+            setPTREnabled(false);
+          }
+        } else {
+          if (value === 'light' || value === 'dark') {
+            onColorChange(value);
+          }
+        }
+      }}
+      onLoadEnd={() => {
+        SplashScreen.hideAsync();
+        setIsLoading(false);
+      }}
+      onError={() => {
+        SplashScreen.hideAsync();
+        setIsLoading(false);
+      }}
+      renderError={() => {
+        return (
+          <View
+            style={{
+              flex: 10000,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingHorizontal: 16,
+            }}>
+            <Text
+              style={{
+                color: colorScheme === 'light' ? 'black' : 'white',
+                fontSize: 20,
+                fontWeight: 'bold',
+              }}>
+              Unable to connect to
+              <Text style={{ color: '#f280a1' }} onPress={() => Linking.openURL('https://dsek.se')}>
+                {' '}
+                D-sek{' '}
+              </Text>
+              servers.
+            </Text>
+            <Text
+              style={{
+                color: colorScheme === 'light' ? 'black' : 'white',
+                fontSize: 16,
+                fontWeight: '600',
+              }}>
+              Try again later or contact
+              <Text
+                style={{ color: '#f280a1' }}
+                onPress={() => Linking.openURL('mailto:dwww@dsek.se')}>
+                {' '}
+                dwww@dsek.se
+              </Text>
+            </Text>
+          </View>
+        );
+      }}
+      pullToRefreshEnabled
+      nestedScrollEnabled
+      setBuiltInZoomControls={false}
+      textZoom={100}
+      decelerationRate="normal"
+      style={{
+        flex: isLoading ? 0 : 1,
+        backgroundColor: 'transparent',
+        position: 'relative',
+      }}
+      renderLoading={() => null}
+      allowsBackForwardNavigationGestures /* for swipe navigation on iOS */
+      sharedCookiesEnabled
+      onNavigationStateChange={(newNavState) => {
+        if (
+          !newNavState.url.startsWith(WEBSITE_URL) &&
+          !newNavState.url.startsWith('https://dsek.se') &&
+          !newNavState.url.startsWith('https://www.dsek.se') &&
+          !newNavState.url.includes('portal.dsek.se')
+        ) {
+          webViewRef.current.stopLoading();
+          Linking.openURL(newNavState.url);
+        } else if (
+          newNavState.url.startsWith('https://dsek.se') ||
+          newNavState.url.startsWith('https://www.dsek.se')
+        ) {
+          webViewRef.current.stopLoading();
+          webViewRef.current.injectJavaScript(`
+          window.location = '${fixUrl(newNavState.url)}';
+        `);
+        }
+      }}
+    />
+  );
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor, position: 'relative' }}>
       <NotificationProvider webref={webViewRef} isLoading={isLoading} />
@@ -130,129 +238,28 @@ const MainView: React.FC<{
           <ActivityIndicator color="#f280a1" size="large" />
         </View>
       )}
-      <ScrollView
-        style={{
-          backgroundColor: 'transparent',
-          position: 'relative',
-        }}
-        contentContainerStyle={{ flexGrow: 1 }}
-        refreshControl={
-          <RefreshControl
-            refreshing={false}
-            onRefresh={() => {
-              setIsLoading(true);
-              webViewRef?.current?.reload();
-            }}
-            enabled={Platform.OS === 'ios' ? true : ptrEnabled}
-          />
-        }>
-        <WebView
-          source={{ uri: startUrl }}
-          ref={webViewRef}
-          forceDarkOn={colorScheme !== 'light'}
-          injectedJavaScript={INTIIAL_JAVASCRIPT_CODE}
-          onMessage={(event) => {
-            let msg;
-            try {
-              msg = JSON.parse(event.nativeEvent.data);
-            } catch (e) {
-              return;
-            }
-            const value = msg.value;
-            if (msg.type === 'scroll') {
-              if (value === 0 && !ptrEnabled) {
-                setPTREnabled(true);
-              } else if (value > 10 && ptrEnabled) {
-                setPTREnabled(false);
-              }
-            } else {
-              if (value === 'light' || value === 'dark') {
-                onColorChange(value);
-              }
-            }
-          }}
-          onLoadEnd={() => {
-            SplashScreen.hideAsync();
-            setIsLoading(false);
-          }}
-          onError={() => {
-            SplashScreen.hideAsync();
-            setIsLoading(false);
-          }}
-          renderError={() => {
-            return (
-              <View
-                style={{
-                  flex: 10000,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  paddingHorizontal: 16,
-                }}>
-                <Text
-                  style={{
-                    color: colorScheme === 'light' ? 'black' : 'white',
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                  }}>
-                  Unable to connect to
-                  <Text
-                    style={{ color: '#f280a1' }}
-                    onPress={() => Linking.openURL('https://dsek.se')}>
-                    {' '}
-                    D-sek{' '}
-                  </Text>
-                  servers.
-                </Text>
-                <Text
-                  style={{
-                    color: colorScheme === 'light' ? 'black' : 'white',
-                    fontSize: 16,
-                    fontWeight: '600',
-                  }}>
-                  Try again later or contact
-                  <Text
-                    style={{ color: '#f280a1' }}
-                    onPress={() => Linking.openURL('mailto:dwww@dsek.se')}>
-                    {' '}
-                    dwww@dsek.se
-                  </Text>
-                </Text>
-              </View>
-            );
-          }}
-          nestedScrollEnabled
-          setBuiltInZoomControls={false}
-          textZoom={100}
-          decelerationRate="normal"
+      {Platform.OS === 'ios' ? (
+        WEBVIEW
+      ) : (
+        <ScrollView
           style={{
-            flex: isLoading ? 0 : 1,
             backgroundColor: 'transparent',
             position: 'relative',
           }}
-          renderLoading={() => null}
-          allowsBackForwardNavigationGestures /* for swipe navigation on iOS */
-          sharedCookiesEnabled
-          onNavigationStateChange={(newNavState) => {
-            if (
-              !newNavState.url.startsWith(WEBSITE_URL) &&
-              !newNavState.url.startsWith('https://dsek.se') &&
-              !newNavState.url.startsWith('https://www.dsek.se') &&
-              !newNavState.url.includes('portal.dsek.se')
-            ) {
-              webViewRef.current.stopLoading();
-              Linking.openURL(newNavState.url);
-            } else if (
-              newNavState.url.startsWith('https://dsek.se') ||
-              newNavState.url.startsWith('https://www.dsek.se')
-            ) {
-              webViewRef.current.stopLoading();
-              webViewRef.current.injectJavaScript(`
-                window.location = '${fixUrl(newNavState.url)}';
-              `);
-            }
-          }}
-        />
-      </ScrollView>
+          contentContainerStyle={{ flexGrow: 1 }}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={() => {
+                setIsLoading(true);
+                webViewRef?.current?.reload();
+              }}
+              enabled={ptrEnabled}
+            />
+          }>
+          {WEBVIEW}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
