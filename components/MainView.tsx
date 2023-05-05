@@ -86,6 +86,19 @@ const MainView: React.FC<{
       : fixUrl(url);
 
   useEffect(() => {
+    if (!url || isLoading || (process.env.NODE_ENV === 'development' && url.startsWith('exp://')))
+      return;
+
+    const fixedUrl = url.startsWith('dsek://') // If they use scheme
+      ? `${WEBSITE_URL}/${url.substring(7)}`
+      : fixUrl(url);
+
+    webViewRef.current.injectJavaScript(`
+      window.location.href = '${fixedUrl}';
+    `);
+  }, [url, isLoading, webViewRef.current]);
+
+  useEffect(() => {
     if (isLoading === false && initialLoad === true) {
       setInitialLoad(false);
     }
