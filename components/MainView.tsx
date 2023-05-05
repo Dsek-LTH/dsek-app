@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useRef } from 'react';
 import {
+  AppState,
   ActivityIndicator,
   BackHandler,
   Platform,
@@ -87,8 +88,9 @@ const MainView: React.FC<{
       : fixUrl(url);
 
   useEffect(() => {
-    if (!url || initialLoad || (process.env.NODE_ENV === 'development' && url.startsWith('exp://')))
-      return;
+    if (AppState.currentState !== 'active') return;
+    if (initialLoad) return;
+    if (!url || (process.env.NODE_ENV === 'development' && url.startsWith('exp://'))) return;
 
     const fixedUrl = url.startsWith('dsek://') // If they use scheme
       ? `${WEBSITE_URL}/${url.substring(7)}`
@@ -97,7 +99,7 @@ const MainView: React.FC<{
     webViewRef.current.injectJavaScript(`
       window.location.href = '${fixedUrl}';
     `);
-  }, [url, initialLoad, webViewRef.current]);
+  }, [url, initialLoad, webViewRef.current, AppState.currentState]);
 
   useEffect(() => {
     if (isLoading === false && initialLoad === true) {
@@ -123,10 +125,10 @@ const MainView: React.FC<{
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const timeout = setTimeout(() => {
       SplashScreen.hideAsync();
     }, 1000);
-    return () => clearInterval(interval);
+    return () => clearTimeout(timeout);
   }, []);
 
   return (
