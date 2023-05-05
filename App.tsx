@@ -22,7 +22,7 @@ const App = () => {
   return (
     <SafeAreaProvider>
       <MainView colorScheme={colorScheme} onColorChange={setColorScheme} />
-      <StatusBar style={colorScheme === 'dark' ? 'dark' : 'light'} />
+      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
     </SafeAreaProvider>
   );
 };
