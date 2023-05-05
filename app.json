@@ -2,7 +2,7 @@
   "expo": {
     "name": "D-sektionen",
     "slug": "dsek-app",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "dsek",
@@ -20,7 +20,7 @@
     ],
     "ios": {
       "bundleIdentifier": "se.dsek.member",
-      "buildNumber": "1.1.5",
+      "buildNumber": "1.1.14",
       "supportsTablet": false,
       "infoPlist": {
         "NSCameraUsageDescription": "This app requires access to the camera to take photos.",
@@ -30,7 +30,8 @@
       "associatedDomains": [
         "applinks:dsek.se",
         "applinks:www.dsek.se"
-      ]
+      ],
+      "bitcode": false
     },
     "android": {
       "package": "se.dsek",
@@ -38,6 +39,7 @@
       "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
+        "monochromeImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#f280a1"
       },
       "googleServicesFile": "./google-services.json",
