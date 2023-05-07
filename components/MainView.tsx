@@ -1,9 +1,7 @@
 import * as Linking from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  AppState,
-  ActivityIndicator,
   BackHandler,
   Platform,
   RefreshControl,
@@ -14,13 +12,9 @@ import {
 } from 'react-native';
 import WebView, { WebViewMessageEvent } from 'react-native-webview';
 
+import { COLORS, WEBSITE_URL } from '~/globals';
+import useDeepLinking, { fixUrl } from '~/hooks/useDeepLinking';
 import NotificationProvider from '~/providers/NotificationProvider';
-
-const WEBSITE_URL = 'https://app.dsek.se';
-
-const DARK_WRAP_COLOR = '#282828';
-const DARK_COLOR = '#121212';
-const LIGHT_COLOR = '#fff';
 
 const INTIIAL_JAVASCRIPT_CODE = `
 (function() {
@@ -66,8 +60,160 @@ ${
 
 true;`;
 
-const fixUrl = (url: string | undefined) =>
-  url?.replace('https://dsek.se', WEBSITE_URL)?.replace('https://www.dsek.se', WEBSITE_URL);
+const REFRESH_DATA_JAVASCRIPT = `
+window.dispatchEvent(new CustomEvent('appRefetch'));
+
+true; // note: this is required, or you'll sometimes get silent failures
+`;
+
+const MainView: React.FC<{
+  colorScheme: 'light' | 'dark';
+  onColorChange: (mode: 'dark' | 'light') => void;
+}> = ({ colorScheme, onColorChange }) => {
+  const webViewRef = useRef<WebView>(null);
+  const [initialLoad, setInitialLoad] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [ptrEnabled, setPTREnabled] = useState(true);
+  const colors = colorScheme === 'light' ? COLORS.light : COLORS.dark;
+
+  const url = useDeepLinking(isLoading, webViewRef);
+
+  useEffect(() => {
+    if (isLoading === false && initialLoad === true) {
+      setInitialLoad(false);
+    }
+  }, [isLoading, initialLoad]);
+  /* for swipe navigation (and back button) on Android */
+  const onAndroidBackPress = () => {
+    if (webViewRef.current) {
+      webViewRef.current.goBack();
+      return true; // prevent default behavior (exit app)
+    }
+    return false;
+  };
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      BackHandler.addEventListener('hardwareBackPress', onAndroidBackPress);
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', onAndroidBackPress);
+      };
+    }
+  }, []);
+
+  // Forcefully remove splash screen after 1 second if loading takes longer than that
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      SplashScreen.hideAsync();
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  const onMessage = (event: WebViewMessageEvent) => {
+    let msg;
+    try {
+      msg = JSON.parse(event.nativeEvent.data);
+    } catch (e) {
+      return;
+    }
+    const value = msg.value;
+    if (msg.type === 'scroll') {
+      if (value === 0 && !ptrEnabled) {
+        setPTREnabled(true);
+      } else if (value > 10 && ptrEnabled) {
+        setPTREnabled(false);
+      }
+    } else {
+      if (value === 'light' || value === 'dark') {
+        onColorChange(value);
+      }
+    }
+  };
+
+  return (
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: colors.headers,
+        position: 'relative',
+      }}>
+      <NotificationProvider webref={webViewRef} isLoading={isLoading} />
+      <ScrollView
+        style={{
+          backgroundColor: 'transparent',
+          position: 'relative',
+          flex: 1,
+        }}
+        contentContainerStyle={{ flexGrow: 1 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={() => {
+              if (isError) {
+                setIsLoading(true);
+                webViewRef.current.reload();
+                setIsError(false);
+                return;
+              }
+              webViewRef.current.injectJavaScript(REFRESH_DATA_JAVASCRIPT);
+            }}
+            enabled={ptrEnabled}
+          />
+        }>
+        <WebView
+          source={{ uri: url }}
+          ref={webViewRef}
+          forceDarkOn={colorScheme !== 'light'}
+          injectedJavaScript={INTIIAL_JAVASCRIPT_CODE}
+          onMessage={onMessage}
+          onLoadEnd={() => {
+            SplashScreen.hideAsync();
+            setIsLoading(false);
+          }}
+          onError={() => {
+            setIsError(true);
+          }}
+          renderError={LoadingError(colorScheme)} // eslint-disable-line @typescript-eslint/no-use-before-define
+          nestedScrollEnabled
+          setBuiltInZoomControls={false}
+          textZoom={100}
+          decelerationRate="normal"
+          style={{
+            flex: isLoading ? 0 : 1,
+            backgroundColor: colors.background,
+            position: 'relative',
+          }}
+          renderLoading={() => null}
+          onContentProcessDidTerminate={() => {
+            // Content process terminated, reload webView (this causes blank screen on iOS otherwise)
+            webViewRef.current.reload();
+          }}
+          allowsBackForwardNavigationGestures /* for swipe navigation on iOS */
+          sharedCookiesEnabled
+          onNavigationStateChange={(newNavState) => {
+            if (
+              !newNavState.url.startsWith(WEBSITE_URL) &&
+              !newNavState.url.startsWith('https://dsek.se') &&
+              !newNavState.url.startsWith('https://www.dsek.se') &&
+              !newNavState.url.includes('portal.dsek.se')
+            ) {
+              webViewRef.current.stopLoading();
+              Linking.openURL(newNavState.url);
+            } else if (
+              newNavState.url.startsWith('https://dsek.se') ||
+              newNavState.url.startsWith('https://www.dsek.se')
+            ) {
+              webViewRef.current.stopLoading();
+              webViewRef.current.injectJavaScript(`
+                window.location = '${fixUrl(newNavState.url)}';
+              `);
+            }
+          }}
+        />
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
 
 const LoadingError = (colorScheme: 'light' | 'dark') => () => {
   return (
@@ -104,181 +250,6 @@ const LoadingError = (colorScheme: 'light' | 'dark') => () => {
         </Text>
       </Text>
     </View>
-  );
-};
-
-const MainView: React.FC<{
-  colorScheme: 'light' | 'dark';
-  onColorChange: (mode: 'dark' | 'light') => void;
-}> = ({ colorScheme, onColorChange }) => {
-  const webViewRef = useRef<WebView>(null);
-  const [initialLoad, setInitialLoad] = React.useState(true);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [ptrEnabled, setPTREnabled] = React.useState(true);
-  const backgroundColor = colorScheme === 'light' ? LIGHT_COLOR : DARK_COLOR;
-
-  const url = Linking.useURL();
-  const startUrl =
-    !url || (process.env.NODE_ENV === 'development' && url.startsWith('exp://'))
-      ? WEBSITE_URL
-      : url?.startsWith('dsek://') // If they use scheme
-      ? `${WEBSITE_URL}/${url.substring(7)}`
-      : fixUrl(url);
-
-  useEffect(() => {
-    if (AppState.currentState !== 'active') return;
-    if (initialLoad) return;
-    if (!url || (process.env.NODE_ENV === 'development' && url.startsWith('exp://'))) return;
-
-    const fixedUrl = url.startsWith('dsek://') // If they use scheme
-      ? `${WEBSITE_URL}/${url.substring(7)}`
-      : fixUrl(url);
-
-    webViewRef.current.injectJavaScript(`
-      window.location.href = '${fixedUrl}';
-    `);
-  }, [url, initialLoad, webViewRef.current, AppState.currentState]);
-
-  useEffect(() => {
-    if (isLoading === false && initialLoad === true) {
-      setInitialLoad(false);
-    }
-  }, [isLoading, initialLoad]);
-
-  /* for swipe navigation (and back button) on Android */
-  const onAndroidBackPress = () => {
-    if (webViewRef.current) {
-      webViewRef.current.goBack();
-      return true; // prevent default behavior (exit app)
-    }
-    return false;
-  };
-  useEffect(() => {
-    if (Platform.OS === 'android') {
-      BackHandler.addEventListener('hardwareBackPress', onAndroidBackPress);
-      return () => {
-        BackHandler.removeEventListener('hardwareBackPress', onAndroidBackPress);
-      };
-    }
-  }, []);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      SplashScreen.hideAsync();
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  const onMessage = (event: WebViewMessageEvent) => {
-    let msg;
-    try {
-      msg = JSON.parse(event.nativeEvent.data);
-    } catch (e) {
-      return;
-    }
-    const value = msg.value;
-    if (msg.type === 'scroll') {
-      if (value === 0 && !ptrEnabled) {
-        setPTREnabled(true);
-      } else if (value > 10 && ptrEnabled) {
-        setPTREnabled(false);
-      }
-    } else {
-      if (value === 'light' || value === 'dark') {
-        onColorChange(value);
-      }
-    }
-  };
-
-  return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: colorScheme === 'dark' ? DARK_WRAP_COLOR : backgroundColor,
-        position: 'relative',
-      }}>
-      <NotificationProvider webref={webViewRef} isLoading={isLoading} />
-      {initialLoad && (
-        <View
-          style={{
-            flex: 5,
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            height: '100%',
-          }}>
-          <ActivityIndicator color="#f280a1" size="large" />
-        </View>
-      )}
-      <ScrollView
-        style={{
-          backgroundColor: 'transparent',
-          position: 'relative',
-        }}
-        contentContainerStyle={{ flexGrow: 1 }}
-        refreshControl={
-          <RefreshControl
-            refreshing={isLoading}
-            onRefresh={() => {
-              setIsLoading(true);
-              webViewRef.current?.reload();
-            }}
-            enabled={ptrEnabled}
-          />
-        }>
-        <WebView
-          source={{ uri: startUrl }}
-          ref={webViewRef}
-          forceDarkOn={colorScheme !== 'light'}
-          injectedJavaScript={INTIIAL_JAVASCRIPT_CODE}
-          onMessage={onMessage}
-          onLoadEnd={() => {
-            SplashScreen.hideAsync();
-            setIsLoading(false);
-          }}
-          onError={() => {
-            SplashScreen.hideAsync();
-            setIsLoading(false);
-          }}
-          renderError={LoadingError(colorScheme)}
-          nestedScrollEnabled
-          setBuiltInZoomControls={false}
-          textZoom={100}
-          decelerationRate="normal"
-          style={{
-            flex: isLoading ? 0 : 1,
-            backgroundColor,
-            position: 'relative',
-          }}
-          renderLoading={() => null}
-          onContentProcessDidTerminate={() => {
-            // Content process terminated, reload webView (this causes blank screen on iOS otherwise)
-            webViewRef.current.reload();
-          }}
-          allowsBackForwardNavigationGestures /* for swipe navigation on iOS */
-          sharedCookiesEnabled
-          onNavigationStateChange={(newNavState) => {
-            if (
-              !newNavState.url.startsWith(WEBSITE_URL) &&
-              !newNavState.url.startsWith('https://dsek.se') &&
-              !newNavState.url.startsWith('https://www.dsek.se') &&
-              !newNavState.url.includes('portal.dsek.se')
-            ) {
-              webViewRef.current.stopLoading();
-              Linking.openURL(newNavState.url);
-            } else if (
-              newNavState.url.startsWith('https://dsek.se') ||
-              newNavState.url.startsWith('https://www.dsek.se')
-            ) {
-              webViewRef.current.stopLoading();
-              webViewRef.current.injectJavaScript(`
-          window.location = '${fixUrl(newNavState.url)}';
-        `);
-            }
-          }}
-        />
-      </ScrollView>
-    </SafeAreaView>
   );
 };
 
