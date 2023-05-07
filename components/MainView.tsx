@@ -12,7 +12,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import WebView from 'react-native-webview';
+import WebView, { WebViewMessageEvent } from 'react-native-webview';
 
 import NotificationProvider from '~/providers/NotificationProvider';
 
@@ -68,6 +68,44 @@ true;`;
 
 const fixUrl = (url: string | undefined) =>
   url?.replace('https://dsek.se', WEBSITE_URL)?.replace('https://www.dsek.se', WEBSITE_URL);
+
+const LoadingError = (colorScheme: 'light' | 'dark') => () => {
+  return (
+    <View
+      style={{
+        flex: 10000,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+      }}>
+      <Text
+        style={{
+          color: colorScheme === 'light' ? 'black' : 'white',
+          fontSize: 20,
+          fontWeight: 'bold',
+        }}>
+        Unable to connect to
+        <Text style={{ color: '#f280a1' }} onPress={() => Linking.openURL('https://dsek.se')}>
+          {' '}
+          D-sek{' '}
+        </Text>
+        servers.
+      </Text>
+      <Text
+        style={{
+          color: colorScheme === 'light' ? 'black' : 'white',
+          fontSize: 16,
+          fontWeight: '600',
+        }}>
+        Try again later or contact
+        <Text style={{ color: '#f280a1' }} onPress={() => Linking.openURL('mailto:dwww@dsek.se')}>
+          {' '}
+          dwww@dsek.se
+        </Text>
+      </Text>
+    </View>
+  );
+};
 
 const MainView: React.FC<{
   colorScheme: 'light' | 'dark';
@@ -131,6 +169,27 @@ const MainView: React.FC<{
     return () => clearTimeout(timeout);
   }, []);
 
+  const onMessage = (event: WebViewMessageEvent) => {
+    let msg;
+    try {
+      msg = JSON.parse(event.nativeEvent.data);
+    } catch (e) {
+      return;
+    }
+    const value = msg.value;
+    if (msg.type === 'scroll') {
+      if (value === 0 && !ptrEnabled) {
+        setPTREnabled(true);
+      } else if (value > 10 && ptrEnabled) {
+        setPTREnabled(false);
+      }
+    } else {
+      if (value === 'light' || value === 'dark') {
+        onColorChange(value);
+      }
+    }
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -172,26 +231,7 @@ const MainView: React.FC<{
           ref={webViewRef}
           forceDarkOn={colorScheme !== 'light'}
           injectedJavaScript={INTIIAL_JAVASCRIPT_CODE}
-          onMessage={(event) => {
-            let msg;
-            try {
-              msg = JSON.parse(event.nativeEvent.data);
-            } catch (e) {
-              return;
-            }
-            const value = msg.value;
-            if (msg.type === 'scroll') {
-              if (value === 0 && !ptrEnabled) {
-                setPTREnabled(true);
-              } else if (value > 10 && ptrEnabled) {
-                setPTREnabled(false);
-              }
-            } else {
-              if (value === 'light' || value === 'dark') {
-                onColorChange(value);
-              }
-            }
-          }}
+          onMessage={onMessage}
           onLoadEnd={() => {
             SplashScreen.hideAsync();
             setIsLoading(false);
@@ -200,47 +240,7 @@ const MainView: React.FC<{
             SplashScreen.hideAsync();
             setIsLoading(false);
           }}
-          renderError={() => {
-            return (
-              <View
-                style={{
-                  flex: 10000,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  paddingHorizontal: 16,
-                }}>
-                <Text
-                  style={{
-                    color: colorScheme === 'light' ? 'black' : 'white',
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                  }}>
-                  Unable to connect to
-                  <Text
-                    style={{ color: '#f280a1' }}
-                    onPress={() => Linking.openURL('https://dsek.se')}>
-                    {' '}
-                    D-sek{' '}
-                  </Text>
-                  servers.
-                </Text>
-                <Text
-                  style={{
-                    color: colorScheme === 'light' ? 'black' : 'white',
-                    fontSize: 16,
-                    fontWeight: '600',
-                  }}>
-                  Try again later or contact
-                  <Text
-                    style={{ color: '#f280a1' }}
-                    onPress={() => Linking.openURL('mailto:dwww@dsek.se')}>
-                    {' '}
-                    dwww@dsek.se
-                  </Text>
-                </Text>
-              </View>
-            );
-          }}
+          renderError={LoadingError(colorScheme)}
           nestedScrollEnabled
           setBuiltInZoomControls={false}
           textZoom={100}
@@ -251,6 +251,10 @@ const MainView: React.FC<{
             position: 'relative',
           }}
           renderLoading={() => null}
+          onContentProcessDidTerminate={() => {
+            // Content process terminated, reload webView (this causes blank screen on iOS otherwise)
+            webViewRef.current.reload();
+          }}
           allowsBackForwardNavigationGestures /* for swipe navigation on iOS */
           sharedCookiesEnabled
           onNavigationStateChange={(newNavState) => {
