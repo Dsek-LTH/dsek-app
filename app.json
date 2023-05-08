@@ -20,12 +20,12 @@
     ],
     "ios": {
       "bundleIdentifier": "se.dsek.member",
-      "buildNumber": "1.2.2",
+      "buildNumber": "1.2.3",
       "supportsTablet": false,
       "infoPlist": {
-        "NSCameraUsageDescription": "This app requires access to the camera to take photos.",
-        "NSPhotoLibraryAddUsageDescription": "This app requires access to the photo library to save photos.",
-        "NSPhotoLibraryUsageDescription": "This app requires access to the photo library to select photos."
+        "NSCameraUsageDescription": "Allow access to camera to take profile picture and upload photo to news articles.",
+        "NSPhotoLibraryAddUsageDescription": "Allow access to the photo library to save photos locally.",
+        "NSPhotoLibraryUsageDescription": "Allow access to photos to upload profile pictures or photos to news articles."
       },
       "associatedDomains": [
         "applinks:dsek.se",
