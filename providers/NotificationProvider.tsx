@@ -28,8 +28,10 @@ const NotificationProvider: React.FC<{
   }, [lastNotificationResponse, webref.current]);
 
   useEffect(() => {
+    let interval;
     if (token && webref.current && !isLoading) {
-      webref.current.injectJavaScript(`
+      interval = setInterval(() => {
+        webref.current.injectJavaScript(`
         // Use window object if notification token has been loaded before page loads
         window.notificationToken = '${token}';
 
@@ -38,7 +40,13 @@ const NotificationProvider: React.FC<{
 
         true; // note: this is required, or you'll sometimes get silent failures
       `);
+      }, 5000);
+      // Poll every 5 seconds to make sure web page has updated token (it it hasn't changed it won't do much)
     }
+    return () => {
+      if (!interval) return;
+      clearInterval(interval);
+    };
   }, [token, webref, isLoading]);
 
   return null;
