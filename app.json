@@ -40,7 +40,7 @@
     },
     "android": {
       "package": "se.dsek",
-      "versionCode": 122,
+      "versionCode": 123,
       "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
@@ -66,12 +66,16 @@
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
+    "notification": {
+      "icon": "./assets/icon.png",
+      "color": "#f280a1"
+    },
     "plugins": [
       [
         "expo-notifications",
         {
           "icon": "./assets/icon.png",
-          "color": "#ffffff"
+          "color": "#f280a1"
         }
       ]
     ],
