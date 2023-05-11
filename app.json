@@ -67,14 +67,14 @@
       "favicon": "./assets/images/favicon.png"
     },
     "notification": {
-      "icon": "./assets/icon.png",
+      "icon": "./assets/images/favicon.png",
       "color": "#f280a1"
     },
     "plugins": [
       [
         "expo-notifications",
         {
-          "icon": "./assets/icon.png",
+          "icon": "./assets/images/favicon.png",
           "color": "#f280a1"
         }
       ]
