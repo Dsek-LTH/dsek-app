@@ -22,7 +22,7 @@ const NotificationProvider: React.FC<{
         | undefined;
       if (!link) return;
       webref.current.injectJavaScript(`
-        window.location.pathname = '${link}';
+        window.location.href = '${link}';
       `);
     }
   }, [lastNotificationResponse, webref.current]);
