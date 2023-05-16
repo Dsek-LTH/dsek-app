@@ -40,23 +40,46 @@ const INTIIAL_JAVASCRIPT_CODE = `
     return result;
   };
   object[method] = newMethod.bind(object);
-})();
 
-${
-  Platform.OS === 'ios'
-    ? ''
-    : `
-  setTimeout(() => {
-    window.addEventListener('scroll', function (event) {
-      window.ReactNativeWebView.postMessage(
-        JSON.stringify({
-          type: 'scroll',
-          value: window.scrollY,
-        })
-      );
+  ${
+    Platform.OS === 'ios'
+      ? ''
+      : `
+  let timeout;
+  let lastY = 0;
+  const addScrollListener = (step) => {
+    if (step > 1000) return;
+    const mainBox = document.getElementById('main-container');
+    if (!mainBox) {
+      // retry until page loads
+      setTimeout(() => addScrollListener(step+1), 100);
+      return;
+    }
+    mainBox.addEventListener('scroll', function (event) {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+      timeout = setTimeout(() => {
+        const value = Math.max(mainBox.scrollTop, 0);
+        if (lastY == value) return;
+        lastY = value;
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: 'scroll',
+            value,
+          })
+        );
+      }, 10);
     }, true);
-  }, 300);`
-}
+  };
+
+  setTimeout(() => {
+    addScrollListener(0);
+  }, 300);
+    `
+  }
+
+})();
 
 true;`;
 
@@ -118,7 +141,7 @@ const MainView: React.FC<{
     }
     const value = msg.value;
     if (msg.type === 'scroll') {
-      if (value === 0 && !ptrEnabled) {
+      if (value <= 0 && !ptrEnabled) {
         setPTREnabled(true);
       } else if (value > 10 && ptrEnabled) {
         setPTREnabled(false);
