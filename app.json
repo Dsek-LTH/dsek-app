@@ -40,7 +40,7 @@
     },
     "android": {
       "package": "se.dsek",
-      "versionCode": 125,
+      "versionCode": 127,
       "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
