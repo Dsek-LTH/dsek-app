@@ -59,6 +59,11 @@ const registerForPushNotificationsAsync = async () => {
       description: 'Information relevant to your booking requests',
       importance: Notifications.AndroidImportance.MAX,
     });
+    Notifications.setNotificationChannelAsync('PING', {
+      name: 'Pings',
+      description: 'When someone pings you',
+      importance: Notifications.AndroidImportance.DEFAULT,
+    });
   }
   if (Device.isDevice) {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
