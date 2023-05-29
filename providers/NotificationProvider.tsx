@@ -1,4 +1,3 @@
-import * as Notifications from 'expo-notifications';
 import React, { useEffect } from 'react';
 import WebView from 'react-native-webview';
 
@@ -9,23 +8,6 @@ const NotificationProvider: React.FC<{
   isLoading: boolean;
 }> = ({ webref, isLoading }) => {
   const token = useNotifications();
-
-  // Listen for if user taps on notification and open related page if they do
-  const lastNotificationResponse = Notifications.useLastNotificationResponse();
-  useEffect(() => {
-    if (
-      lastNotificationResponse &&
-      lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
-    ) {
-      const link = lastNotificationResponse.notification.request.content.data.link as
-        | string
-        | undefined;
-      if (!link) return;
-      webref.current.injectJavaScript(`
-        window.location.href = '${link}';
-      `);
-    }
-  }, [lastNotificationResponse, webref.current]);
 
   useEffect(() => {
     let interval;
