@@ -2,7 +2,7 @@
   "expo": {
     "name": "D-sektionen",
     "slug": "dsek-app",
-    "version": "1.2.4",
+    "version": "1.2.7",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "dsek",
@@ -21,7 +21,7 @@
     ],
     "ios": {
       "bundleIdentifier": "se.dsek.member",
-      "buildNumber": "1.2.5",
+      "buildNumber": "1.2.7",
       "supportsTablet": false,
       "infoPlist": {
         "NSCameraUsageDescription": "Allow access to camera to take profile picture and upload photo to news articles.",
@@ -41,7 +41,7 @@
     },
     "android": {
       "package": "se.dsek",
-      "versionCode": 127,
+      "versionCode": 128,
       "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
