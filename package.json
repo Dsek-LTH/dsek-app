@@ -13,7 +13,10 @@
     "deploy:android": "eas build --platform android --profile production",
     "deploy:ios": "eas build --platform ios --profile production",
     "deploy": "eas build --profile production",
-    "send-update": "eas update --auto"
+    "send-update": "eas update --auto",
+    "submit:android": "eas submit -p android",
+    "submit:ios": "eas submit -p ios",
+    "submit": "eas submit"
   },
   "jest": {
     "preset": "jest-expo"
