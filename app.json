@@ -13,14 +13,15 @@
       "backgroundColor": "#f280a1"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/1e625b79-dfbd-4e9c-802f-3e8451ad87e6"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "bundleIdentifier": "se.dsek.member",
-      "buildNumber": "1.2.4",
+      "buildNumber": "1.2.5",
       "supportsTablet": false,
       "infoPlist": {
         "NSCameraUsageDescription": "Allow access to camera to take profile picture and upload photo to news articles.",
@@ -84,6 +85,9 @@
       "eas": {
         "projectId": "1e625b79-dfbd-4e9c-802f-3e8451ad87e6"
       }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }
