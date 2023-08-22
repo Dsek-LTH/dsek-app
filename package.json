@@ -10,8 +10,10 @@
     "build:ios": "expo build:ios",
     "eject": "expo eject",
     "dev": "expo start --tunnel",
-    "deploy:android": "eas build --platform android",
-    "deploy:ios": "eas build --platform ios"
+    "deploy:android": "eas build --platform android --profile production",
+    "deploy:ios": "eas build --platform ios --profile production",
+    "deploy": "eas build --profile production",
+    "send-update": "eas update --auto"
   },
   "jest": {
     "preset": "jest-expo"
