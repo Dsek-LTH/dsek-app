@@ -55,6 +55,7 @@ const INTIIAL_JAVASCRIPT_CODE = `
       setTimeout(() => addScrollListener(step+1), 100);
       return;
     }
+    if (mainBox.getAttribute('scroll-listener-added') === 'true') return;
     mainBox.addEventListener('scroll', function (event) {
       if (timeout) {
         clearTimeout(timeout);
@@ -71,6 +72,7 @@ const INTIIAL_JAVASCRIPT_CODE = `
         );
       }, 10);
     }, true);
+    mainBox.setAttribute('scroll-listener-added', 'true');
   };
 
   setTimeout(() => {
@@ -222,7 +224,10 @@ const MainView: React.FC<{
             ) {
               webViewRef.current.stopLoading();
               Linking.openURL(newNavState.url);
-            } else if (
+              return;
+            }
+
+            if (
               newNavState.url.startsWith('https://dsek.se') ||
               newNavState.url.startsWith('https://www.dsek.se')
             ) {
@@ -230,6 +235,12 @@ const MainView: React.FC<{
               webViewRef.current.injectJavaScript(`
                 window.location = '${fixUrl(newNavState.url)}';
               `);
+              return;
+            }
+
+            // inject scroll listener on page change
+            if (newNavState.url.startsWith(WEBSITE_URL)) {
+              webViewRef.current?.injectJavaScript(INTIIAL_JAVASCRIPT_CODE);
             }
           }}
         />
