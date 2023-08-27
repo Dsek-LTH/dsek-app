@@ -84,7 +84,7 @@ const registerForPushNotificationsAsync = async () => {
 };
 
 const useNotifications = () => {
-  const [expoPushToken, setExpoPushToken] = useState('');
+  const [expoPushToken, setExpoPushToken] = useState<string | undefined>('');
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
