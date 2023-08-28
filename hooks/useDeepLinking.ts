@@ -11,6 +11,7 @@ export const fixUrl = (url: string | undefined) => {
   if (url.startsWith('dsek://')) return `${WEBSITE_URL}/${url.substring(7)}`;
   if (url.startsWith('https://dsek.se')) return url.replace('https://dsek.se', WEBSITE_URL);
   if (url.startsWith('https://www.dsek.se')) return url.replace('https://www.dsek.se', WEBSITE_URL);
+  if (url.startsWith('/')) return `${WEBSITE_URL}${url}`;
   return url;
 };
 
