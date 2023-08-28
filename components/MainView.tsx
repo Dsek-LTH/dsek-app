@@ -144,7 +144,7 @@ const MainView: React.FC<{
     }
     const value = msg.value;
     if (msg.type === 'scroll') {
-      if (value <= 0 && !ptrEnabled) {
+      if (value <= 10 && !ptrEnabled) {
         setPTREnabled(true);
       } else if (value > 10 && ptrEnabled) {
         setPTREnabled(false);
