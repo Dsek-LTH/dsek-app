@@ -13,7 +13,11 @@
     "deploy:android": "eas build --platform android --profile production",
     "deploy:ios": "eas build --platform ios --profile production",
     "deploy": "eas build --profile production",
-    "send-update": "eas update --auto",
+    "preview:android": "eas build --platform android --profile preview",
+    "preview:ios": "eas build --platform ios --profile preview",
+    "preview": "eas build --profile preview",
+    "preview-update": "eas update --branch preview",
+    "send-update": "eas update --branch production",
     "submit:android": "eas submit -p android",
     "submit:ios": "eas submit -p ios",
     "submit": "eas submit"

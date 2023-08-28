@@ -77,6 +77,7 @@ const INTIIAL_JAVASCRIPT_CODE = `
 
   setTimeout(() => {
     addScrollListener(0);
+    setInterval(() => addScrollListener(0), 500);
   }, 300);
     `
   }
