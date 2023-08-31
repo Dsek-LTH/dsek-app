@@ -1,10 +1,9 @@
 import * as Linking from 'expo-linking';
 import * as Notifications from 'expo-notifications';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import WebView from 'react-native-webview';
 
 import { WEBSITE_URL } from '~/globals';
-import useAppState from '~/hooks/useAppState';
 
 export const fixUrl = (url: string | undefined) => {
   if (!url) return url;
@@ -13,6 +12,11 @@ export const fixUrl = (url: string | undefined) => {
   if (url.startsWith('https://www.dsek.se')) return url.replace('https://www.dsek.se', WEBSITE_URL);
   if (url.startsWith('/')) return `${WEBSITE_URL}${url}`;
   return url;
+};
+
+export const getPathname = (url: string | undefined) => {
+  if (!url?.startsWith(WEBSITE_URL)) return undefined;
+  return url.substring(WEBSITE_URL.length);
 };
 
 const getInitialUrl = (
@@ -37,23 +41,22 @@ const useDeepLinking = (
   isLoading: boolean,
   webViewRef: React.MutableRefObject<WebView<object>>
 ) => {
-  const appState = useAppState();
-
   const deepLinkingUrl = Linking.useURL();
   // Listen for if user taps on notification and open related page if they do
   const lastNotificationResponse = Notifications.useLastNotificationResponse();
-  // Calculate initial url
-  const initialUrl = getInitialUrl(deepLinkingUrl, lastNotificationResponse);
-
-  const [urlToLoad, setUrlToLoad] = React.useState<string | undefined>(initialUrl);
-  const startUrl =
-    !urlToLoad || (process.env.NODE_ENV === 'development' && urlToLoad.startsWith('exp://'))
+  const [latestReceivedDynamicUrl, setLatestReceivedDynamicUrl] = React.useState<
+    string | undefined
+  >(getInitialUrl(deepLinkingUrl, lastNotificationResponse));
+  const initialUrl = useMemo(() => {
+    return !latestReceivedDynamicUrl ||
+      (process.env.NODE_ENV === 'development' && latestReceivedDynamicUrl.startsWith('exp://'))
       ? WEBSITE_URL
-      : fixUrl(urlToLoad);
-
+      : fixUrl(latestReceivedDynamicUrl);
+  }, [webViewRef.current, latestReceivedDynamicUrl]);
+  // Calculate initial url
   useEffect(() => {
     if (!deepLinkingUrl) return;
-    setUrlToLoad(deepLinkingUrl);
+    setLatestReceivedDynamicUrl(deepLinkingUrl);
   }, [deepLinkingUrl]);
 
   useEffect(() => {
@@ -61,25 +64,10 @@ const useDeepLinking = (
       | string
       | undefined;
     if (!link) return;
-    setUrlToLoad(link);
+    setLatestReceivedDynamicUrl(link);
   }, [lastNotificationResponse]);
 
-  useEffect(() => {
-    if (!urlToLoad) return; // If no url to load
-    if (appState !== 'active') return; // Only change page in foreground
-    if (isLoading || !webViewRef.current) return; // If the app is still loading
-    // Dev guard
-    if (process.env.NODE_ENV === 'development' && urlToLoad.startsWith('exp://')) return;
-
-    const fixedUrl = fixUrl(urlToLoad);
-
-    webViewRef.current.injectJavaScript(`
-      window.location.href = '${fixedUrl}';
-    `);
-    setUrlToLoad(undefined); // Only navigate to each url ONCE
-  }, [urlToLoad, isLoading, webViewRef.current, appState]);
-
-  return startUrl;
+  return initialUrl;
 };
 
 export default useDeepLinking;
