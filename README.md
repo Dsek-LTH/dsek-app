@@ -43,3 +43,13 @@ To communicate events and data between the app and website native window events 
    6. Under "What's new in this version" add some changelog notes
    7. Click "Save" and "Add to review", then "Send to review"
    8. Wait for review to complete. *(It happens that we get rejected, usually just small fixes though)*
+
+
+# How to update
+Using `expo-updates` we can send updates to devices without requiring them to update their app via their app store. Only javascript updates can be sent, no native code changes. See `expo-updates` own documentation for more detailed information.
+
+Updates can be sent running `npm run send-update`, pick an update message (latest commit message by default), then waiting for the process to complete. That's it, the update will now be installed the next time each user restarts their app.
+## Testing updates
+If you want to test a feature, you can run `npm run preview` (or `npm run preview:ios` or `npm run preview:android`), get a build that you can install locally on a device.
+
+Afterwards just call `npm run preview-update` to test an update.
