@@ -1,4 +1,4 @@
-export const WEBSITE_URL = 'https://app.dsek.se';
+export const WEBSITE_URL = 'https://dsek.vercel.app/';
 
 export const COLORS = {
   dark: {
