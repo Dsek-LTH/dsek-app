@@ -53,3 +53,6 @@ Updates can be sent running `npm run send-update`, pick an update message (lates
 If you want to test a feature, you can run `npm run preview` (or `npm run preview:ios` or `npm run preview:android`), get a build that you can install locally on a device.
 
 Afterwards just call `npm run preview-update` to test an update.
+
+## Testing with Expo Go
+Another way to test the app is using [Expo Go](https://expo.dev/go). First, make sure you are on the same network as the pc hosting the development build. Then run `npx expo start --tunnel`, then scan the QR-code displayed. The Expo Go app will open automatically and start loading the development build.
