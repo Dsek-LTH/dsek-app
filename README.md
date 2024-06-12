@@ -1,5 +1,5 @@
 # D-Sek App
-This app is a mobile version of our page available at https://dsek.se. The app is "simply" a WebView wrapper around https://app.dsek.se (a version of the site customized to look like a native app). There are some extra features regarding deep-linking, notifications, dark/light mode and app-specific information which are added by the app.
+This app is a mobile version of our page available at https://dsek.se. The app is "simply" a WebView wrapper around https://dsek.se. There are some extra features regarding deep-linking, notifications, dark/light mode and app-specific information which are added by the app.
 
 The goal is, and probably should always be, to keep the app AS SIMPLE AS POSSIBLE. This way ALMOST ALL updates can be done purely by releasing a new version of the site and no changes needs to be done by the app.
 
