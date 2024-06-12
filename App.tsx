@@ -2,7 +2,7 @@ import * as NavigationBar from 'expo-navigation-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
-import { Platform, useColorScheme, StatusBar as RNStatusBar } from 'react-native';
+import { Platform, useColorScheme, StatusBar as RNStatusBar, ColorSchemeName } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import MainView from '~/components/MainView';
@@ -11,7 +11,7 @@ import { COLORS } from '~/globals';
 SplashScreen.preventAutoHideAsync();
 const App = () => {
   const preferredColorScheme = useColorScheme();
-  const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(preferredColorScheme);
+  const [colorScheme, setColorScheme] = React.useState<ColorSchemeName>(preferredColorScheme);
   const colors = colorScheme === 'light' ? COLORS.light : COLORS.dark;
 
   useEffect(() => {

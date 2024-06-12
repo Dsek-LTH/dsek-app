@@ -3,6 +3,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   BackHandler,
+  ColorSchemeName,
   Platform,
   RefreshControl,
   SafeAreaView,
@@ -10,7 +11,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import WebView, { WebViewMessageEvent } from 'react-native-webview';
+import { WebView, WebViewMessageEvent } from 'react-native-webview';
 
 import { COLORS, WEBSITE_URL } from '~/globals';
 import useDeepLinking, { fixUrl } from '~/hooks/useDeepLinking';
@@ -93,7 +94,7 @@ true; // note: this is required, or you'll sometimes get silent failures
 `;
 
 const MainView: React.FC<{
-  colorScheme: 'light' | 'dark';
+  colorScheme: ColorSchemeName;
   onColorChange: (mode: 'dark' | 'light') => void;
 }> = ({ colorScheme, onColorChange }) => {
   const webViewRef = useRef<WebView>(null);
@@ -177,11 +178,11 @@ const MainView: React.FC<{
             onRefresh={() => {
               if (isError) {
                 setIsLoading(true);
-                webViewRef.current.reload();
+                webViewRef.current?.reload();
                 setIsError(false);
                 return;
               }
-              webViewRef.current.injectJavaScript(REFRESH_DATA_JAVASCRIPT);
+              webViewRef.current?.injectJavaScript(REFRESH_DATA_JAVASCRIPT);
             }}
             enabled={ptrEnabled}
           />
@@ -209,10 +210,10 @@ const MainView: React.FC<{
             backgroundColor: colors.background,
             position: 'relative',
           }}
-          renderLoading={() => null}
+          renderLoading={() => <></>}
           onContentProcessDidTerminate={() => {
             // Content process terminated, reload webView (this causes blank screen on iOS otherwise)
-            webViewRef.current.reload();
+            webViewRef.current?.reload();
           }}
           allowsBackForwardNavigationGestures /* for swipe navigation on iOS */
           sharedCookiesEnabled
@@ -223,7 +224,7 @@ const MainView: React.FC<{
               !newNavState.url.startsWith('https://www.dsek.se') &&
               !newNavState.url.includes('portal.dsek.se')
             ) {
-              webViewRef.current.stopLoading();
+              webViewRef.current?.stopLoading();
               Linking.openURL(newNavState.url);
               return;
             }
@@ -232,8 +233,8 @@ const MainView: React.FC<{
               newNavState.url.startsWith('https://dsek.se') ||
               newNavState.url.startsWith('https://www.dsek.se')
             ) {
-              webViewRef.current.stopLoading();
-              webViewRef.current.injectJavaScript(`
+              webViewRef.current?.stopLoading();
+              webViewRef.current?.injectJavaScript(`
                 window.location = '${fixUrl(newNavState.url)}';
               `);
               return;
@@ -250,7 +251,7 @@ const MainView: React.FC<{
   );
 };
 
-const LoadingError = (colorScheme: 'light' | 'dark') => () => {
+const LoadingError = (colorScheme: ColorSchemeName) => () => {
   return (
     <View
       style={{
