@@ -4,7 +4,7 @@ import WebView from 'react-native-webview';
 import useNotifications from '~/hooks/useNotifications';
 
 const NotificationProvider: React.FC<{
-  webref: React.MutableRefObject<WebView<object>>;
+  webref: React.MutableRefObject<WebView<object> | null>;
   isLoading: boolean;
 }> = ({ webref, isLoading }) => {
   const token = useNotifications();
@@ -13,7 +13,7 @@ const NotificationProvider: React.FC<{
     let interval: NodeJS.Timer | undefined;
     if (token && webref.current && !isLoading) {
       const uploadToken = () => {
-        webref.current.injectJavaScript(`
+        webref.current?.injectJavaScript(`
         // Use window object if notification token has been loaded before page loads
         window.notificationToken = '${token}';
 
@@ -32,7 +32,7 @@ const NotificationProvider: React.FC<{
       if (!interval) return;
       clearInterval(interval);
     };
-  }, [token, webref, isLoading]);
+  }, [token, webref.current, isLoading]);
 
   return null;
 };

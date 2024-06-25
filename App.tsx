@@ -11,13 +11,15 @@ import { COLORS } from '~/globals';
 SplashScreen.preventAutoHideAsync();
 const App = () => {
   const preferredColorScheme = useColorScheme();
-  const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(preferredColorScheme);
+  const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
+    preferredColorScheme ?? 'dark'
+  );
   const colors = colorScheme === 'light' ? COLORS.light : COLORS.dark;
 
   useEffect(() => {
     if (Platform.OS === 'android') {
-      NavigationBar.setBackgroundColorAsync(colorScheme === 'dark' ? '#121212' : '#fff');
-      NavigationBar.setBorderColorAsync(colorScheme === 'dark' ? '#121212' : '#fff');
+      NavigationBar.setBackgroundColorAsync(colorScheme === 'dark' ? '#252225' : '#DDDDDD');
+      NavigationBar.setBorderColorAsync(colorScheme === 'dark' ? '#252225' : '#DDDDDD');
     }
   }, [colorScheme]);
 

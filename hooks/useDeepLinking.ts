@@ -7,9 +7,7 @@ import { WEBSITE_URL } from '~/globals';
 
 export const fixUrl = (url: string | undefined) => {
   if (!url) return url;
-  if (url.startsWith('dsek://')) return `${WEBSITE_URL}/${url.substring(7)}`;
-  if (url.startsWith('https://dsek.se')) return url.replace('https://dsek.se', WEBSITE_URL);
-  if (url.startsWith('https://www.dsek.se')) return url.replace('https://www.dsek.se', WEBSITE_URL);
+  if (url.startsWith('dsek://')) return `${WEBSITE_URL}/${url.substring('dsek://'.length)}`;
   if (url.startsWith('/')) return `${WEBSITE_URL}${url}`;
   return url;
 };
@@ -39,7 +37,7 @@ const getInitialUrl = (
 
 const useDeepLinking = (
   isLoading: boolean,
-  webViewRef: React.MutableRefObject<WebView<object>>
+  webViewRef: React.RefObject<WebView<object> | null>
 ) => {
   const deepLinkingUrl = Linking.useURL();
   // Listen for if user taps on notification and open related page if they do
@@ -53,6 +51,7 @@ const useDeepLinking = (
       ? WEBSITE_URL
       : fixUrl(latestReceivedDynamicUrl);
   }, [webViewRef.current, latestReceivedDynamicUrl]);
+
   // Calculate initial url
   useEffect(() => {
     if (!deepLinkingUrl) return;

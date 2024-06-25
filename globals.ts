@@ -1,12 +1,13 @@
-export const WEBSITE_URL = 'https://app.dsek.se';
+// export const WEBSITE_URL = 'https://dsek.se';
+export const WEBSITE_URL = "https://51degrees.com/developers/user-agent-tester";
 
 export const COLORS = {
   dark: {
-    background: '#121212',
-    headers: '#282828',
+    background: '#252225',
+    headers: '#201E20',
   },
   light: {
-    background: '#fff',
-    headers: '#fff',
+    background: '#DDDDDD',
+    headers: '#e5e5e5',
   },
 };
