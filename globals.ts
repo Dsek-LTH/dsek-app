@@ -1,5 +1,5 @@
 // export const WEBSITE_URL = 'https://dsek.se';
-export const WEBSITE_URL = "https://51degrees.com/developers/user-agent-tester";
+export const WEBSITE_URL = "http://localhost:5173";
 
 export const COLORS = {
   dark: {

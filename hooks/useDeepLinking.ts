@@ -45,6 +45,7 @@ const useDeepLinking = (
   const [latestReceivedDynamicUrl, setLatestReceivedDynamicUrl] = React.useState<
     string | undefined
   >(getInitialUrl(deepLinkingUrl, lastNotificationResponse));
+
   const initialUrl = useMemo(() => {
     return !latestReceivedDynamicUrl ||
       (process.env.NODE_ENV === 'development' && latestReceivedDynamicUrl.startsWith('exp://'))

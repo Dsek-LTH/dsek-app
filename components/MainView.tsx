@@ -6,6 +6,7 @@ import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 import WebView, { WebViewMessageEvent } from 'react-native-webview';
 
 import { COLORS, WEBSITE_URL } from '~/globals';
+import useDeepLinking from '~/hooks/useDeepLinking';
 import NotificationProvider from '~/providers/NotificationProvider';
 
 const DARK_LIGHT_MODE_CODE = `
@@ -68,8 +69,7 @@ const MainView: React.FC<{
   const colors = colorScheme === 'light' ? COLORS.light : COLORS.dark;
   const insets = useSafeAreaInsets();
 
-  // const url = useDeepLinking(isLoading, webViewRef);
-  const url = WEBSITE_URL;
+  const url = useDeepLinking(isLoading, webViewRef);
 
   useEffect(() => {
     if (isLoading === false && initialLoad === true) {
@@ -126,22 +126,26 @@ const MainView: React.FC<{
       }}>
       <NotificationProvider webref={webViewRef} isLoading={isLoading} />
       <WebView
-        userAgent={`DSEK-APP (${Platform.OS})`}
+        userAgent={`DSEK-APP (${Platform.OS}), APP-INSETS (${JSON.stringify({
+          ...insets,
+          bottom: Platform.OS === 'ios' ? insets.bottom : insets.bottom + 16,
+        })})`}
+        // Due to a known bug where custom headers are only sent upon first request and not subsequent, without any solution right now, the preferred way is to send custom data in the user agent instead.
         source={{
           uri: url,
-          headers: {
-            'app-insets': JSON.stringify(insets),
-          },
+          // headers: {
+          //   'app-insets': JSON.stringify(insets),
+          // },
         }}
         ref={webViewRef}
-        forceDarkOn={colorScheme !== 'light'}
+        // forceDarkOn={colorScheme !== 'light'}
         injectedJavaScript={INTIIAL_JAVASCRIPT_CODE(insets)}
         onMessage={onMessage}
         onLoadEnd={() => {
           SplashScreen.hideAsync();
           setIsLoading(false);
         }}
-        renderError={LoadingError(colorScheme)} // eslint-disable-line @typescript-eslint/no-use-before-define
+        renderError={LoadingError(colorScheme, webViewRef.current?.reload)} // eslint-disable-line @typescript-eslint/no-use-before-define
         setBuiltInZoomControls={false}
         pullToRefreshEnabled
         textZoom={100}
@@ -167,22 +171,16 @@ const MainView: React.FC<{
           ) {
             webViewRef.current?.stopLoading();
             Linking.openURL(newNavState.url);
-            return;
           }
           // inject scroll listener on page change
-          if (
-            newNavState.url.startsWith(WEBSITE_URL) ||
-            newNavState.url.startsWith('https://www.dsek.se')
-          ) {
-            webViewRef.current?.injectJavaScript(INTIIAL_JAVASCRIPT_CODE(insets));
-          }
+          // webViewRef.current?.injectJavaScript(INTIIAL_JAVASCRIPT_CODE(insets));
         }}
       />
     </View>
   );
 };
 
-const LoadingError = (colorScheme: 'light' | 'dark') => () => {
+const LoadingError = (colorScheme: 'light' | 'dark', reload: (() => void) | undefined) => () => {
   return (
     <View
       style={{
@@ -210,7 +208,10 @@ const LoadingError = (colorScheme: 'light' | 'dark') => () => {
           fontSize: 16,
           fontWeight: '600',
         }}>
-        Try again later or contact
+        <Text style={{ color: '#f280a1' }} onPress={reload}>
+          Try again
+        </Text>{' '}
+        later or contact
         <Text style={{ color: '#f280a1' }} onPress={() => Linking.openURL('mailto:dwww@dsek.se')}>
           {' '}
           dwww@dsek.se

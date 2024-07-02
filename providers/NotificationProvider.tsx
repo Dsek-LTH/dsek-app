@@ -12,8 +12,7 @@ const NotificationProvider: React.FC<{
   useEffect(() => {
     let interval: NodeJS.Timer | undefined;
     if (token && webref.current && !isLoading) {
-      const uploadToken = () => {
-        webref.current?.injectJavaScript(`
+      webref.current?.injectJavaScript(`
         // Use window object if notification token has been loaded before page loads
         window.notificationToken = '${token}';
 
@@ -22,11 +21,6 @@ const NotificationProvider: React.FC<{
 
         true; // note: this is required, or you'll sometimes get silent failures
       `);
-      };
-      // Poll every 5 seconds to make sure web page has updated token (it it hasn't changed it won't do much)
-      interval = setInterval(uploadToken, 5000);
-      // And upload now
-      uploadToken();
     }
     return () => {
       if (!interval) return;

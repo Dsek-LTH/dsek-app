@@ -44,7 +44,7 @@ const useNotifications = () => {
     registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
   }, []);
 
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' && expoPushToken) {
     return `DEV-${expoPushToken}`;
   }
 
