@@ -1,5 +1,4 @@
-// export const WEBSITE_URL = 'https://dsek.se';
-export const WEBSITE_URL = "http://localhost:5173";
+export const WEBSITE_URL = 'https://dsek.se';
 
 export const COLORS = {
   dark: {
