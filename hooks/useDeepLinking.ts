@@ -50,7 +50,7 @@ const useDeepLinking = (
     return !latestReceivedDynamicUrl ||
       (process.env.NODE_ENV === 'development' && latestReceivedDynamicUrl.startsWith('exp://'))
       ? WEBSITE_URL
-      : fixUrl(latestReceivedDynamicUrl);
+      : fixUrl(latestReceivedDynamicUrl) ?? WEBSITE_URL;
   }, [webViewRef.current, latestReceivedDynamicUrl]);
 
   // Calculate initial url

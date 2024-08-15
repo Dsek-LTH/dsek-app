@@ -1,4 +1,4 @@
-export const WEBSITE_URL = 'https://dsek.se';
+export const WEBSITE_URL = 'https://www.dsek.se';
 
 export const COLORS = {
   dark: {
