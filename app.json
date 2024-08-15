@@ -21,7 +21,6 @@
     ],
     "ios": {
       "bundleIdentifier": "se.dsek.member",
-      "buildNumber": "1.3.1",
       "supportsTablet": false,
       "infoPlist": {
         "NSCameraUsageDescription": "Allow access to camera to take profile picture and upload photo to news articles.",
@@ -31,17 +30,14 @@
       "associatedDomains": [
         "applinks:dsek.se",
         "applinks:www.dsek.se",
-        "applinks:app.dsek.se",
         "webcredentials:dsek.se",
         "webcredentials:www.dsek.se",
-        "webcredentials:app.dsek.se",
         "webcredentials:portal.dsek.se"
       ],
       "bitcode": false
     },
     "android": {
       "package": "se.dsek",
-      "versionCode": 130,
       "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
@@ -54,7 +50,7 @@
           "data": [
             {
               "scheme": "https",
-              "host": "*.dsek.se"
+              "host": "www.dsek.se"
             }
           ],
           "category": [
