@@ -10,6 +10,7 @@ export enum NotificationSettingType {
   CREATE_MANDATE = 'CREATE_MANDATE',
   BOOKING_REQUEST = 'BOOKING_REQUEST',
   PING = 'PING',
+  PURCHASES = 'PURCHASES',
 }
 
 type ChannelOptions = {
@@ -56,6 +57,11 @@ export const notificationChannels: Record<NotificationSettingType, NotificationC
   [NotificationSettingType.PING]: {
     name: 'PINGs',
     description: 'When you get pinged',
+    importance: AndroidImportance.DEFAULT,
+  },
+  [NotificationSettingType.PURCHASES]: {
+    name: 'Purchases',
+    description: 'Notifications about your purchases',
     importance: AndroidImportance.DEFAULT,
   },
 };
