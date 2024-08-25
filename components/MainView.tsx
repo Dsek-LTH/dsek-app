@@ -132,7 +132,10 @@ const MainView: React.FC<{
         })})`}
         // Due to a known bug where custom headers are only sent upon first request and not subsequent, without any solution right now, the preferred way is to send custom data in the user agent instead.
         source={{
-          uri: url,
+          uri:
+            url === WEBSITE_URL || url === WEBSITE_URL + '/'
+              ? `${WEBSITE_URL}/native-app-router`
+              : '',
           // headers: {
           //   'app-insets': JSON.stringify(insets),
           // },
