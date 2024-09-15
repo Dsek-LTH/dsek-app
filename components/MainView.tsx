@@ -135,7 +135,7 @@ const MainView: React.FC<{
           uri:
             url === WEBSITE_URL || url === WEBSITE_URL + '/'
               ? `${WEBSITE_URL}/native-app-router`
-              : '',
+              : url,
           // headers: {
           //   'app-insets': JSON.stringify(insets),
           // },
@@ -169,6 +169,7 @@ const MainView: React.FC<{
           webViewRef.current?.injectJavaScript(INTIIAL_JAVASCRIPT_CODE(insets));
           if (
             !newNavState.url.startsWith(WEBSITE_URL) &&
+            !newNavState.url.startsWith('https://dsek.se') &&
             !newNavState.url.startsWith('https://www.dsek.se') &&
             !newNavState.url.includes('portal.dsek.se')
           ) {
