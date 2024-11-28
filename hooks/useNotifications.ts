@@ -1,9 +1,6 @@
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { useEffect, useState } from 'react';
-import { Platform } from 'react-native';
-
-import { notificationChannelList } from '~/hooks/AndroidNotificationChannels';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -14,11 +11,6 @@ Notifications.setNotificationHandler({
 });
 
 const registerForPushNotificationsAsync = async () => {
-  if (Platform.OS === 'android') {
-    for (const channel of notificationChannelList) {
-      Notifications.setNotificationChannelAsync(channel.channelId, channel.options);
-    }
-  }
   if (!Device.isDevice) return;
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;
