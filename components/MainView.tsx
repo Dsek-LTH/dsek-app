@@ -1,4 +1,5 @@
 import * as Linking from 'expo-linking';
+import * as Notifications from 'expo-notifications';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { BackHandler, Platform, Text, View } from 'react-native';
@@ -42,8 +43,30 @@ const DARK_LIGHT_MODE_CODE = `
   })();
 `;
 
+const BADGE_COUNT_CODE = `
+  (() => {
+    const initial = window.unreadNotificationCount;
+    if (initial !== undefined) {
+      window.ReactNativeWebView?.postMessage(JSON.stringify({
+        type: 'badge',
+        value: initial
+      }));
+    }
+    window.addEventListener('unreadNotificationCount', (event) => {
+      const count = event.detail?.count;
+      if (count === undefined) return;
+
+      window.ReactNativeWebView?.postMessage(JSON.stringify({
+        type: 'badge',
+        value: count
+      }));
+    });
+  })();
+`;
+
 const INTIIAL_JAVASCRIPT_CODE = (insets: EdgeInsets) => `
   ${DARK_LIGHT_MODE_CODE}
+  ${BADGE_COUNT_CODE}
 
   window.appInsets = {
     top: ${insets.top},
@@ -101,6 +124,8 @@ const MainView: React.FC<{
       if (value === 'light' || value === 'dark') {
         onColorChange(value);
       }
+    } else if (msg.type === 'badge') {
+      Notifications.setBadgeCountAsync(value ?? 0);
     }
   };
 
