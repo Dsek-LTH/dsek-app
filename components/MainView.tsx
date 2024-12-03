@@ -7,6 +7,7 @@ import WebView, { WebViewMessageEvent } from 'react-native-webview';
 
 import { COLORS, WEBSITE_URL } from '~/globals';
 import useDeepLinking from '~/hooks/useDeepLinking';
+import useForcedUpdate from '~/hooks/useForcedUpdate';
 import NotificationProvider from '~/providers/NotificationProvider';
 
 const DARK_LIGHT_MODE_CODE = `
@@ -53,16 +54,11 @@ const INTIIAL_JAVASCRIPT_CODE = (insets: EdgeInsets) => `
 
 true;`;
 
-// const REFRESH_DATA_JAVASCRIPT = `
-// window.dispatchEvent(new CustomEvent('appRefetch'));
-
-// true; // note: this is required, or you'll sometimes get silent failures
-// `;
-
 const MainView: React.FC<{
   colorScheme: 'light' | 'dark';
   onColorChange: (mode: 'dark' | 'light') => void;
 }> = ({ colorScheme, onColorChange }) => {
+  const updateCheckDone = useForcedUpdate();
   const webViewRef = useRef<WebView>(null);
   const [initialLoad, setInitialLoad] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
@@ -93,15 +89,6 @@ const MainView: React.FC<{
     }
   }, [onAndroidBackPress]);
 
-  // Forcefully remove splash screen after 1 second if loading takes longer than that
-  useEffect(() => {
-    if (!isLoading) return;
-    const timeout = setTimeout(() => {
-      SplashScreen.hideAsync();
-    }, 3000);
-    return () => clearTimeout(timeout);
-  }, [isLoading]);
-
   const onMessage = (event: WebViewMessageEvent) => {
     let msg;
     try {
@@ -116,6 +103,10 @@ const MainView: React.FC<{
       }
     }
   };
+
+  useEffect(() => {
+    if (!isLoading && updateCheckDone) SplashScreen.hideAsync();
+  }, [isLoading, updateCheckDone]);
 
   return (
     <View
@@ -134,7 +125,8 @@ const MainView: React.FC<{
         source={{
           uri:
             url === WEBSITE_URL || url === WEBSITE_URL + '/'
-              ? `${WEBSITE_URL}/native-app-router`
+              ? // ? `${WEBSITE_URL}/native-app-router`
+                `${WEBSITE_URL}/app/home`
               : url,
           // headers: {
           //   'app-insets': JSON.stringify(insets),
@@ -145,7 +137,6 @@ const MainView: React.FC<{
         injectedJavaScript={INTIIAL_JAVASCRIPT_CODE(insets)}
         onMessage={onMessage}
         onLoadEnd={() => {
-          SplashScreen.hideAsync();
           setIsLoading(false);
         }}
         renderError={LoadingError(colorScheme, webViewRef.current?.reload)} // eslint-disable-line @typescript-eslint/no-use-before-define
@@ -158,7 +149,7 @@ const MainView: React.FC<{
           backgroundColor: colors.background,
           position: 'relative',
         }}
-        // renderLoading={() => null}
+        // renderLoading={() => <ActivityIndicator size="large" />}
         onContentProcessDidTerminate={() => {
           // Content process terminated, reload webView (this causes blank screen on iOS otherwise)
           webViewRef.current?.reload();
@@ -166,7 +157,7 @@ const MainView: React.FC<{
         allowsBackForwardNavigationGestures /* for swipe navigation on iOS */
         sharedCookiesEnabled
         onNavigationStateChange={(newNavState) => {
-          webViewRef.current?.injectJavaScript(INTIIAL_JAVASCRIPT_CODE(insets));
+          if (newNavState.url === 'about:blank') return;
           if (
             !newNavState.url.startsWith(WEBSITE_URL) &&
             !newNavState.url.startsWith('https://dsek.se') &&
@@ -175,9 +166,9 @@ const MainView: React.FC<{
           ) {
             webViewRef.current?.stopLoading();
             Linking.openURL(newNavState.url);
+          } else {
+            webViewRef.current?.injectJavaScript(INTIIAL_JAVASCRIPT_CODE(insets));
           }
-          // inject scroll listener on page change
-          // webViewRef.current?.injectJavaScript(INTIIAL_JAVASCRIPT_CODE(insets));
         }}
       />
     </View>

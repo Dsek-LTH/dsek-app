@@ -1,6 +1,7 @@
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -12,6 +13,14 @@ Notifications.setNotificationHandler({
 
 const registerForPushNotificationsAsync = async () => {
   if (!Device.isDevice) return;
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'D-sek notifications',
+      description:
+        'Notifications from D-sek, configure which types of notifications you want in the app.',
+      importance: Notifications.AndroidImportance.MAX,
+    });
+  }
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;
   if (existingStatus !== 'granted') {
