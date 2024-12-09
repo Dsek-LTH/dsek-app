@@ -112,7 +112,7 @@ const MainView: React.FC<{
     }
   }, [onAndroidBackPress]);
 
-  const onMessage = (event: WebViewMessageEvent) => {
+  const onMessage = async (event: WebViewMessageEvent) => {
     let msg;
     try {
       msg = JSON.parse(event.nativeEvent.data);
@@ -125,7 +125,11 @@ const MainView: React.FC<{
         onColorChange(value);
       }
     } else if (msg.type === 'badge') {
-      Notifications.setBadgeCountAsync(value ?? 0);
+      try {
+        await Notifications.setBadgeCountAsync(value ?? 0);
+      } catch (e) {
+        console.warn('setBadgeCountAsync failed', e);
+      }
     }
   };
 
