@@ -172,7 +172,7 @@ const MainView: React.FC<{
         setBuiltInZoomControls={false}
         pullToRefreshEnabled
         textZoom={100}
-        decelerationRate="normal"
+        decelerationRate={Platform.OS === 'ios' ? 'normal' : undefined}
         style={{
           flex: isLoading ? 0 : 1,
           backgroundColor: colors.background,
