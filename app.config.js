@@ -34,7 +34,7 @@ module.exports = {
         'applinks:www.dsek.se',
         'webcredentials:dsek.se',
         'webcredentials:www.dsek.se',
-        'webcredentials:portal.dsek.se',
+        'webcredentials:auth.dsek.se',
       ],
       bitcode: false,
     },

@@ -191,7 +191,7 @@ const MainView: React.FC<{
             !newNavState.url.startsWith(WEBSITE_URL) &&
             !newNavState.url.startsWith('https://dsek.se') &&
             !newNavState.url.startsWith('https://www.dsek.se') &&
-            !newNavState.url.includes('portal.dsek.se')
+            !newNavState.url.includes('auth.dsek.se')
           ) {
             webViewRef.current?.stopLoading();
             Linking.openURL(newNavState.url);
