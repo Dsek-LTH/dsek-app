@@ -154,8 +154,7 @@ const MainView: React.FC<{
         source={{
           uri:
             url === WEBSITE_URL || url === WEBSITE_URL + '/'
-              ? // ? `${WEBSITE_URL}/native-app-router`
-                `${WEBSITE_URL}/app/home`
+              ? `${WEBSITE_URL}/native-app-router`
               : url,
           // headers: {
           //   'app-insets': JSON.stringify(insets),
