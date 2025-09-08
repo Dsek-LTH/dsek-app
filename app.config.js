@@ -45,7 +45,7 @@ module.exports = {
         foregroundImage: './assets/images/adaptive-icon.png',
         backgroundColor: '#f280a1',
       },
-      googleServicesFile: process.env.GOOGLE_SERVICES_JSON || './google-services.json',
+      //googleServicesFile: process.env.GOOGLE_SERVICES_JSON || './google-services.json',
       intentFilters: [
         {
           action: 'VIEW',
