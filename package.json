@@ -4,8 +4,8 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "build:ios": "expo build:ios",
     "eject": "expo eject",
@@ -13,7 +13,7 @@
     "deploy:android": "eas build --platform android --profile production",
     "deploy:ios": "eas build --platform ios --profile production",
     "deploy": "eas build --profile production",
-    "preview:android": "eas build --platform android --profile preview",
+    "preview:android": "eas build --local --platform android --profile preview",
     "preview:ios": "eas build --platform ios --profile preview",
     "preview": "eas build --profile preview",
     "preview-update": "eas update --branch preview",
@@ -28,7 +28,6 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.1.2",
     "babel-plugin-module-resolver": "^5.0.2",
-    "expo": "^53.0.0",
     "expo-asset": "~11.1.7",
     "expo-device": "~7.1.4",
     "expo-linking": "~7.1.7",

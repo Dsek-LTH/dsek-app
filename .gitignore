@@ -17,3 +17,7 @@ web-build/
 # Service account
 google-service-account.json
 google-services.json
+
+debug.keystore
+
+#android/*
