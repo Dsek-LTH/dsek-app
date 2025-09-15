@@ -20,4 +20,4 @@ google-services.json
 
 debug.keystore
 
-#android/*
+android/
