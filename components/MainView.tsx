@@ -105,9 +105,9 @@ const MainView: React.FC<{
   }, [webViewRef.current]);
   useEffect(() => {
     if (Platform.OS === 'android') {
-      BackHandler.addEventListener('hardwareBackPress', onAndroidBackPress);
+      const subscription = BackHandler.addEventListener('hardwareBackPress', onAndroidBackPress);
       return () => {
-        BackHandler.removeEventListener('hardwareBackPress', onAndroidBackPress);
+        subscription.remove();
       };
     }
   }, [onAndroidBackPress]);
