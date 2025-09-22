@@ -44,7 +44,7 @@ To communicate events and data between the app and website native window events 
 
 ### Submitting manually
 
-1. Download the `.ipa` file
+1. Download the `.ipa` file (it will be in the project root directory if built locally)
 2. Use the "transporter" app (only available on MacOS) to upload the `.ipa` file to App Store Connect.
 3. On app store connect:
    1. Go to "My Apps"
@@ -60,7 +60,7 @@ To communicate events and data between the app and website native window events 
 
 Using the scripts (from package.json) that end in `:local` it is possible to build locally instead of building on Expo's servers. To set this up follow the guide on https://docs.expo.dev/get-started/set-up-your-environment/?mode=development-build&buildEnv=local&platform=android&device=physical except `npx expo install expo-dev-client`
 
-The script `npx expo run:android` (specifically `expo prebuild`) will generate an android/ directory. This will cause `eas build` to complain about bare workflow. To fix this, simply remove the android directory.
+The scripts `npx expo run:android` and `npx expo run:ios` (specifically `expo prebuild`) will generate an android/ or ios/ directory. This will cause `eas build` to complain about bare workflow. To fix this, simply remove the android/ or ios/ directory.
 
 # How to update
 

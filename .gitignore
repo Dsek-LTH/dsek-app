@@ -20,4 +20,10 @@ google-services.json
 
 debug.keystore
 
+# Local build directories:
 android/
+ios/
+
+# built files: 
+*.aab
+*.apk
