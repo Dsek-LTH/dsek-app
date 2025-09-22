@@ -2,7 +2,7 @@ module.exports = {
   expo: {
     name: 'D-sektionen',
     slug: 'dsek-app',
-    version: '2.0.1',
+    version: '2.1.0',
     orientation: 'portrait',
     icon: './assets/images/icon.png',
     scheme: 'dsek',
@@ -45,7 +45,7 @@ module.exports = {
         foregroundImage: './assets/images/adaptive-icon.png',
         backgroundColor: '#f280a1',
       },
-      googleServicesFile: process.env.GOOGLE_SERVICES_JSON || './google-services.json',
+      //googleServicesFile: process.env.GOOGLE_SERVICES_JSON || './google-services.json',
       intentFilters: [
         {
           action: 'VIEW',

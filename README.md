@@ -12,7 +12,7 @@ To communicate events and data between the app and website native window events 
 
 ## Android
 
-1. Build with `npm run deploy:android` or `eas build --platform android` (as of writing)
+1. Build with `npm run deploy:android` or `npm run deploy:android:local` (from package.json)
 2. Wait for the build to complete
 3. Submit the app
 
@@ -24,7 +24,7 @@ To communicate events and data between the app and website native window events 
 
 ### Submitting manually
 
-1. Download the `.aab` file
+1. Download the `.aab` file (it will be in the project root directory if built locally)
 2. Go to Google Play Console
 3. Go to "Production" > "Create New Release"
 4. Upload the file and add relevant changelog notes
@@ -32,7 +32,7 @@ To communicate events and data between the app and website native window events 
 
 ## iOS
 
-1. Build with `npm run deploy:ios` or `eas build --platform ios` (as of writing)
+1. Build with `npm run deploy:ios` (from package.json)
 2. Login with our apple account
 3. Wait for the build to complete
 4. Submit
@@ -44,7 +44,7 @@ To communicate events and data between the app and website native window events 
 
 ### Submitting manually
 
-1. Download the `.ipa` file
+1. Download the `.ipa` file (it will be in the project root directory if built locally)
 2. Use the "transporter" app (only available on MacOS) to upload the `.ipa` file to App Store Connect.
 3. On app store connect:
    1. Go to "My Apps"
@@ -55,6 +55,12 @@ To communicate events and data between the app and website native window events 
    6. Under "What's new in this version" add some changelog notes
    7. Click "Save" and "Add to review", then "Send to review"
    8. Wait for review to complete. _(It happens that we get rejected, usually just small fixes though)_
+
+# Building locally
+
+Using the scripts (from package.json) that end in `:local` it is possible to build locally instead of building on Expo's servers. To set this up follow the guide on https://docs.expo.dev/get-started/set-up-your-environment/?mode=development-build&buildEnv=local&platform=android&device=physical except `npx expo install expo-dev-client`
+
+The scripts `npx expo run:android` and `npx expo run:ios` (specifically `expo prebuild`) will generate an android/ or ios/ directory. This will cause `eas build` to complain about bare workflow. To fix this, simply remove the android/ or ios/ directory.
 
 # How to update
 

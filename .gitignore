@@ -17,3 +17,13 @@ web-build/
 # Service account
 google-service-account.json
 google-services.json
+
+debug.keystore
+
+# Local build directories:
+android/
+ios/
+
+# built files: 
+*.aab
+*.apk
