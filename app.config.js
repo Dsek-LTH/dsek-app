@@ -45,7 +45,10 @@ module.exports = {
         foregroundImage: './assets/images/adaptive-icon.png',
         backgroundColor: '#f280a1',
       },
-      //googleServicesFile: process.env.GOOGLE_SERVICES_JSON || './google-services.json',
+      // Required for Android push notifications. Set GOOGLE_SERVICES_JSON as a
+      // file environment variable in EAS, or place google-services.json in the
+      // project root for local builds.
+      googleServicesFile: process.env.GOOGLE_SERVICES_JSON || './google-services.json',
       intentFilters: [
         {
           action: 'VIEW',
