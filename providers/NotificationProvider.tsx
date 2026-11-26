@@ -6,12 +6,14 @@ import useNotifications from '~/hooks/useNotifications';
 const NotificationProvider: React.FC<{
   webref: React.MutableRefObject<WebView<object> | null>;
   isLoading: boolean;
-}> = ({ webref, isLoading }) => {
+  pageLoadCount: number;
+}> = ({ webref, isLoading, pageLoadCount }) => {
   const token = useNotifications();
 
   useEffect(() => {
-    let interval: NodeJS.Timer | undefined;
-    if (token && webref.current && !isLoading) {
+    // pageLoadCount changes after every full page load. A login redirect or
+    // reload replaces `window`, so hand the token to the new page too.
+    if (pageLoadCount > 0 && token && webref.current && !isLoading) {
       webref.current?.injectJavaScript(`
         // Use window object if notification token has been loaded before page loads
         window.notificationToken = '${token}';
@@ -22,11 +24,7 @@ const NotificationProvider: React.FC<{
         true; // note: this is required, or you'll sometimes get silent failures
       `);
     }
-    return () => {
-      if (!interval) return;
-      clearInterval(interval);
-    };
-  }, [token, webref.current, isLoading]);
+  }, [token, webref.current, isLoading, pageLoadCount]);
 
   return null;
 };

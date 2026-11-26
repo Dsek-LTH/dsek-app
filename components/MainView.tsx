@@ -85,6 +85,7 @@ const MainView: React.FC<{
   const webViewRef = useRef<WebView>(null);
   const [initialLoad, setInitialLoad] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [pageLoadCount, setPageLoadCount] = useState(0);
   const colors = colorScheme === 'light' ? COLORS.light : COLORS.dark;
   const insets = useSafeAreaInsets();
 
@@ -144,7 +145,11 @@ const MainView: React.FC<{
         backgroundColor: colors.headers,
         position: 'relative',
       }}>
-      <NotificationProvider webref={webViewRef} isLoading={isLoading} />
+      <NotificationProvider
+        webref={webViewRef}
+        isLoading={isLoading}
+        pageLoadCount={pageLoadCount}
+      />
       <WebView
         userAgent={`DSEK-APP (${Platform.OS}), APP-INSETS (${JSON.stringify({
           ...insets,
@@ -166,6 +171,9 @@ const MainView: React.FC<{
         onMessage={onMessage}
         onLoadEnd={() => {
           setIsLoading(false);
+          // A full page load (login, reload) replaces `window`, so tell the
+          // provider to hand the push token to the new page as well.
+          setPageLoadCount((count) => count + 1);
         }}
         renderError={LoadingError(colorScheme, webViewRef.current?.reload)} // eslint-disable-line @typescript-eslint/no-use-before-define
         setBuiltInZoomControls={false}
