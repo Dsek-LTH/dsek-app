@@ -62,6 +62,8 @@ Using the scripts (from package.json) that end in `:local` it is possible to bui
 
 The scripts `npx expo run:android` and `npx expo run:ios` (specifically `expo prebuild`) will generate an android/ or ios/ directory. This will cause `eas build` to complain about bare workflow. To fix this, simply remove the android/ or ios/ directory.
 
+For Android push notifications, `google-services.json` must be available to the build. Place it in the project root, or set `GOOGLE_SERVICES_JSON` to its path; `app.config.js` reads either.
+
 # How to update
 
 Using `expo-updates` we can send updates to devices without requiring them to update their app via their app store. Only javascript updates can be sent, no native code changes. See `expo-updates` own documentation for more detailed information.
