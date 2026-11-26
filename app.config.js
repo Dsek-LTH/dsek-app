@@ -1,3 +1,15 @@
+const fs = require('fs');
+
+const googleServicesFile = [process.env.GOOGLE_SERVICES_JSON, './google-services.json'].find(
+  (f) => f && fs.existsSync(f)
+);
+
+// On EAS Build the file is required: fail loudly instead of silently
+// shipping a build without Firebase (= broken Android push notifications).
+if (process.env.EAS_BUILD && !googleServicesFile) {
+  throw new Error('google-services.json missing: set the GOOGLE_SERVICES_JSON file variable in EAS');
+}
+
 module.exports = {
   expo: {
     name: 'D-sektionen',
@@ -48,7 +60,9 @@ module.exports = {
       // Required for Android push notifications. Set GOOGLE_SERVICES_JSON as a
       // file environment variable in EAS, or place google-services.json in the
       // project root for local builds.
-      googleServicesFile: process.env.GOOGLE_SERVICES_JSON || './google-services.json',
+      // Only set when the file exists: `eas update` runs locally without EAS
+      // file env vars, and the file isn't needed for OTA updates anyway.
+      ...(googleServicesFile ? { googleServicesFile } : {}),
       intentFilters: [
         {
           action: 'VIEW',
